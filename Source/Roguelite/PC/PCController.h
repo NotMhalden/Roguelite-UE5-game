@@ -30,13 +30,25 @@ protected:
 	
 	virtual void OnPossess(APawn* InPawn) override;
 	
-
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Mouse", meta = (AllowPrivateAccess = "true", ClampMin = "0.01", ClampMax = "100.0"))
+	float HorizontalSensitivity = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Mouse", meta = (AllowPrivateAccess = "true", ClampMin = "0.01", ClampMax = "100.0"))
+	float VerticalSensitivity = 1.f;
 	
-	void JumpStart();
-	void JumpEnd();
+public:
+	virtual void AddYawInput(float Val) override;
+	virtual void AddPitchInput(float Val) override;
 	
+protected:
+	bool bIsDashing = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
+	float DashPower = 10.f;
+	
+	FTimerHandle DashDelayTimerHandle;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
+	float DashDelay = 0.5f;
+	void DashDelayOver();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
@@ -51,4 +63,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Action", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> IAJump = nullptr;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Action", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> IADash = nullptr;
+	
+protected:
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	
+	void JumpStart();
+	void JumpEnd();
+	
+	void Dash(const FInputActionValue& Value);
 };

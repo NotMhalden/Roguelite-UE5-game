@@ -37,9 +37,10 @@ void APCController::SetupInputComponent()
 	
 	EnhancedInputComponent -> BindAction(IALook.Get(), ETriggerEvent::Triggered, this, &APCController::Look);
 	
-	
 	EnhancedInputComponent -> BindAction(IAJump.Get(), ETriggerEvent::Started, this, &APCController::JumpStart);
 	EnhancedInputComponent -> BindAction(IAJump.Get(), ETriggerEvent::Completed, this, &APCController::JumpEnd);
+	
+	EnhancedInputComponent -> BindAction(IADash.Get(), ETriggerEvent::Triggered, this, &APCController::Dash);
 }
 
 
@@ -58,6 +59,22 @@ void APCController::OnPossess(APawn* InPawn)
 	}
 }
 
+
+
+void APCController::AddYawInput(float Val)
+{
+	Super::AddYawInput(Val * HorizontalSensitivity);
+}
+
+void APCController::AddPitchInput(float Val)
+{
+	Super::AddPitchInput(Val * VerticalSensitivity);
+}
+
+void APCController::DashDelayOver()
+{
+	bIsDashing = false;
+}
 
 
 void APCController::Move(const FInputActionValue& Value)
@@ -94,4 +111,18 @@ void APCController::JumpStart()
 void APCController::JumpEnd()
 {
 	FPSCharacter -> StopJumping();
+}
+
+void APCController::Dash(const FInputActionValue& Value)
+{
+	if (not bIsDashing)
+	{
+		bIsDashing = true;
+		
+		FVector CurrentVelocity = FPSCharacter -> GetVelocity();
+		CurrentVelocity = FVector(CurrentVelocity.X * DashPower, CurrentVelocity.Y * DashPower, CurrentVelocity.Z);
+		FPSCharacter -> LaunchCharacter(CurrentVelocity, false, false);
+		
+		GetWorldTimerManager().SetTimer(DashDelayTimerHandle, this, &APCController::DashDelayOver, DashDelay, false);
+	}
 }
