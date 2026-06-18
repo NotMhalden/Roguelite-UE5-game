@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PC/PlayerCharacter.h"
+#include "PlayerCharacter.h"
+
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -15,6 +17,14 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	APlayerController* CastPlayerController = Cast<APlayerController>(PlayerController);
+	if (not CastPlayerController)
+	{
+		return;
+	}
 	
 }
 
