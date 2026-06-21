@@ -33,17 +33,22 @@ public:
 	
 	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile | Components", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* Mesh = nullptr;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile | Components", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* SphereComponent = nullptr;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0.1"))
-	float MaxSpeed = 1000.f;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile | Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile | Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true", ClampMin = "1000.0"))
+	float MaxSpeed = 3500.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
+	float BulletLifespan = 5.0f;
+	
+
 	
 };

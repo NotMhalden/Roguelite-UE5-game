@@ -61,13 +61,10 @@ void APlayerCharacter::Shoot()
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Player shoots"));
-	CurrentWeapon -> Fire(Camera -> GetForwardVector());
+	CurrentWeapon -> Fire(Camera -> GetForwardVector(), Camera -> GetComponentLocation());
 }
 
-FVector APlayerCharacter::GetCameraFowardVector()
-{
-	return Camera -> GetForwardVector();
-}
+
 
 
 // Called every frame

@@ -31,7 +31,7 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-void AWeapon::Fire(FVector CameraForwardVector)
+void AWeapon::Fire(FVector CameraForwardVector, FVector CameraLocation)
 {
 	if (not BulletClass)
 	{
@@ -45,12 +45,14 @@ void AWeapon::Fire(FVector CameraForwardVector)
 	}
 	
 	FRotator SpawnRotation = CameraForwardVector.Rotation();
-	FVector SpawnLocation = CameraForwardVector + UKismetMathLibrary::GetForwardVector(SpawnRotation) * 10.0;
+	FVector SpawnLocation = CameraLocation + CameraForwardVector * 70.0;
+	
 	
 	
 	FActorSpawnParameters ActorSpawnParams;
-	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
+	UE_LOG(LogTemp, Warning, TEXT("Bullet Spawned"));
 	World -> SpawnActor<ABullet>(BulletClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 }
 

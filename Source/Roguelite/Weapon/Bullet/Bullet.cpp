@@ -13,20 +13,24 @@ ABullet::ABullet()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Component"));
-	SphereComponent->InitSphereRadius(5.0f);
+	SphereComponent -> InitSphereRadius(5.0f);
 	SphereComponent -> SetupAttachment(GetRootComponent());
-	SphereComponent->BodyInstance.SetCollisionProfileName("Projectile");
-	SphereComponent->OnComponentHit.AddDynamic(this, &ABullet::OnCollision);
+	SphereComponent -> BodyInstance.SetCollisionProfileName("Projectile");
+	SphereComponent -> OnComponentHit.AddDynamic(this, &ABullet::OnCollision);
 	RootComponent = SphereComponent;
 	
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh -> SetupAttachment(SphereComponent);
+	Mesh -> BodyInstance.SetCollisionProfileName("Projectile");
 	
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 	MovementComponent -> UpdatedComponent = SphereComponent;
 	MovementComponent -> InitialSpeed = MaxSpeed;
 	MovementComponent -> MaxSpeed = MaxSpeed;
+	MovementComponent -> ProjectileGravityScale = 0.f;
+	
+	InitialLifeSpan = BulletLifespan;
 }
 
 // Called when the game starts or when spawned

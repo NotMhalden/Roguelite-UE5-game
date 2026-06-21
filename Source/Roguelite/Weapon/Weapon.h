@@ -32,7 +32,7 @@ public:
 	
 	
 public:
-	virtual void Fire(FVector CameraForwardVector);
+	virtual void Fire(FVector CameraForwardVector, FVector CameraLocation);
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
