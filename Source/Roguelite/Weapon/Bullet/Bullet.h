@@ -28,6 +28,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
+	UFUNCTION()
+	void OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -38,7 +41,7 @@ public:
 	USphereComponent* SphereComponent = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0.1"))
-	float MaxSpeed = 1.f;
+	float MaxSpeed = 1000.f;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile | Components")
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;

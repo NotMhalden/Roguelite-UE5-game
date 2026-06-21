@@ -52,4 +52,6 @@ public:
 public:
 	void Shoot();
 	
+	FVector GetCameraFowardVector();
+	
 };

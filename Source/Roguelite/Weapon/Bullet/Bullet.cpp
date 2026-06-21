@@ -15,12 +15,18 @@ ABullet::ABullet()
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Component"));
 	SphereComponent->InitSphereRadius(5.0f);
 	SphereComponent -> SetupAttachment(GetRootComponent());
+	SphereComponent->BodyInstance.SetCollisionProfileName("Projectile");
+	SphereComponent->OnComponentHit.AddDynamic(this, &ABullet::OnCollision);
 	RootComponent = SphereComponent;
+	
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh -> SetupAttachment(SphereComponent);
 	
-	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Mesh"));
+	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
+	MovementComponent -> UpdatedComponent = SphereComponent;
+	MovementComponent -> InitialSpeed = MaxSpeed;
+	MovementComponent -> MaxSpeed = MaxSpeed;
 }
 
 // Called when the game starts or when spawned
@@ -34,5 +40,11 @@ void ABullet::BeginPlay()
 void ABullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ABullet::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	Destroy();
 }
 

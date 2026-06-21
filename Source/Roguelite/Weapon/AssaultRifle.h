@@ -24,5 +24,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 public:
-	virtual void Fire() override;
+	virtual void Fire(FVector CameraForwardVector) override;
 };

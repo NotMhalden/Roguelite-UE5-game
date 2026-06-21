@@ -3,6 +3,9 @@
 
 #include "Weapon.h"
 
+#include "Bullet/Bullet.h"
+#include "Kismet/KismetMathLibrary.h"
+
 // Sets default values
 AWeapon::AWeapon()
 {
@@ -28,8 +31,26 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-void AWeapon::Fire()
+void AWeapon::Fire(FVector CameraForwardVector)
 {
+	if (not BulletClass)
+	{
+		return;
+	}
 	
+	UWorld* const World = GetWorld();
+	if (not World)
+	{
+		return;
+	}
+	
+	FRotator SpawnRotation = CameraForwardVector.Rotation();
+	FVector SpawnLocation = CameraForwardVector + UKismetMathLibrary::GetForwardVector(SpawnRotation) * 10.0;
+	
+	
+	FActorSpawnParameters ActorSpawnParams;
+	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	
+	World -> SpawnActor<ABullet>(BulletClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 }
 

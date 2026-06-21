@@ -42,6 +42,8 @@ void APCController::SetupInputComponent()
 	EnhancedInputComponent -> BindAction(IAJump.Get(), ETriggerEvent::Completed, this, &APCController::JumpEnd);
 	
 	EnhancedInputComponent -> BindAction(IADash.Get(), ETriggerEvent::Triggered, this, &APCController::Dash);
+	
+	EnhancedInputComponent -> BindAction(IAShoot.Get(), ETriggerEvent::Triggered, this, &APCController::Shoot);
 }
 
 

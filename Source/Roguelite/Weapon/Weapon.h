@@ -8,6 +8,11 @@
 
 class ABullet;
 
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FGetCameraForwardVectorDelegate, FVector /*CameraForwardVector */);
+
+inline FGetCameraForwardVectorDelegate GetCameraForwardVectorDelegate;
+
 UCLASS()
 class ROGUELITE_API AWeapon : public AActor
 {
@@ -27,7 +32,7 @@ public:
 	
 	
 public:
-	virtual void Fire();
+	virtual void Fire(FVector CameraForwardVector);
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
