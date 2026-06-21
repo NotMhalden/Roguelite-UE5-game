@@ -4,6 +4,7 @@
 #include "PCController.h"
 
 #include "PlayerCharacter.h"
+#include "Roguelite/Weapon/Weapon.h"
 
 APCController::APCController()
 {
@@ -108,10 +109,12 @@ void APCController::JumpStart()
 	FPSCharacter -> Jump();
 }
 
+
 void APCController::JumpEnd()
 {
 	FPSCharacter -> StopJumping();
 }
+
 
 void APCController::Dash(const FInputActionValue& Value)
 {
@@ -120,9 +123,15 @@ void APCController::Dash(const FInputActionValue& Value)
 		bIsDashing = true;
 		
 		FVector CurrentVelocity = FPSCharacter -> GetVelocity();
-		CurrentVelocity = FVector(CurrentVelocity.X * DashPower, CurrentVelocity.Y * DashPower, CurrentVelocity.Z);
+		CurrentVelocity = FVector(CurrentVelocity.X * DashPower, CurrentVelocity.Y * DashPower, 0);
 		FPSCharacter -> LaunchCharacter(CurrentVelocity, false, false);
 		
 		GetWorldTimerManager().SetTimer(DashDelayTimerHandle, this, &APCController::DashDelayOver, DashDelay, false);
 	}
 }
+
+void APCController::Shoot()
+{
+	FPSCharacter -> Shoot();
+}
+

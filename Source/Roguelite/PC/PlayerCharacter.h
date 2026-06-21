@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
+#include "Roguelite/Weapon/Weapon.h"
 #include "PlayerCharacter.generated.h"
 
 class APCController;
@@ -29,5 +31,25 @@ protected:
 	
 	UPROPERTY()
 	TSubclassOf<APCController> PPControllerClass = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* WeaponPoint = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* Camera = nullptr;
+	
+public:
+	// Current design allows for 3 weapons. 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	TArray<AWeapon*> Weapons;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	AWeapon* CurrentWeapon = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeapon> StartingWeapon = nullptr;
+	
+public:
+	void Shoot();
 	
 };

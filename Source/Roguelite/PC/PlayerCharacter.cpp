@@ -4,13 +4,19 @@
 #include "PlayerCharacter.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Roguelite/Weapon/Weapon.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	WeaponPoint = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Point"));
+	WeaponPoint -> SetupAttachment(GetRootComponent());
+	
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	Camera -> SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -26,7 +32,34 @@ void APlayerCharacter::BeginPlay()
 		return;
 	}
 	
+	if (StartingWeapon)
+	{
+		if (CurrentWeapon)
+		{
+			CurrentWeapon -> Destroy();
+			CurrentWeapon = nullptr;
+		}
+		
+		
+		FVector Location = WeaponPoint -> GetRelativeLocation();
+		FRotator Rotation(0.0f, 0.0f, 0.0f);
+		
+		CurrentWeapon = GetWorld() -> SpawnActor<AWeapon>(StartingWeapon, Location, Rotation);
+		
+		FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepRelative, true);
+		CurrentWeapon -> AttachToComponent(Camera, AttachmentRules);
+	}
+	
 }
+
+
+
+void APlayerCharacter::Shoot()
+{
+	CurrentWeapon -> Fire();
+}
+
+
 
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
