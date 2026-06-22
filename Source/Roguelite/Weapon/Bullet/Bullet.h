@@ -44,11 +44,8 @@ public:
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true", ClampMin = "1000.0"))
-	float MaxSpeed = 3500.f;
+	float MaxSpeed = 5500.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
 	float BulletLifespan = 5.0f;
-	
-
-	
 };
