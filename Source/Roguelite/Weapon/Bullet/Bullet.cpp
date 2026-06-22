@@ -4,6 +4,7 @@
 #include "Bullet.h"
 
 #include "Components/SphereComponent.h"
+#include "Roguelite/Enemy/EnemyPawn.h"
 
 
 // Sets default values
@@ -26,8 +27,8 @@ ABullet::ABullet()
 	
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 	MovementComponent -> UpdatedComponent = SphereComponent;
-	MovementComponent -> InitialSpeed = MaxSpeed;
-	MovementComponent -> MaxSpeed = MaxSpeed;
+	MovementComponent -> InitialSpeed = BulletSpeed;
+	MovementComponent -> MaxSpeed = BulletSpeed;
 	MovementComponent -> ProjectileGravityScale = 0.f;
 	
 	InitialLifeSpan = BulletLifespan;
@@ -49,6 +50,10 @@ void ABullet::Tick(float DeltaTime)
 void ABullet::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	if (auto* EnemyPlayer = Cast<AEnemyPawn>(OtherActor))
+	{
+		EnemyPlayer -> TakeDamage(BulletDamage);
+	}
 	Destroy();
 }
 

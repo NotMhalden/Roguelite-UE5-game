@@ -32,13 +32,23 @@ public:
 	
 	
 public:
-	virtual void Fire(FVector CameraForwardVector, FVector CameraLocation);
+	virtual void MainAction(FVector CameraForwardVector, FVector CameraLocation);
+	
+	void FireRateDelayOver();
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* Mesh = nullptr;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<ABullet> BulletClass = nullptr;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
+	int32 Damage = 10;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
+	float AttackRate = 10;
+	
+	
+protected:
+	FTimerHandle AttackRateTimerHandle;
+	bool bWeaponCooling = false;
+	float AttackRateCooldown = 0.1f;
 };

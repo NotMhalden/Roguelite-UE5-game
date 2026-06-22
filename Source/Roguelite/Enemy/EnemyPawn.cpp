@@ -19,6 +19,7 @@ AEnemyPawn::AEnemyPawn()
 	Mesh -> SetupAttachment(CapsuleComponent);
 }
 
+
 // Called when the game starts or when spawned
 void AEnemyPawn::BeginPlay()
 {
@@ -26,15 +27,33 @@ void AEnemyPawn::BeginPlay()
 	
 }
 
+
 // Called every frame
 void AEnemyPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
+
 // Called to bind functionality to input
 void AEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+
+void AEnemyPawn::TakeDamage(int DamageTaken)
+{
+	Health -= DamageTaken;
+	if (Health <= 0)
+	{
+		Death();
+	}
+}
+
+
+void AEnemyPawn::Death()
+{
+	Destroy();
 }
 

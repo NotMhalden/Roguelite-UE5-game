@@ -19,6 +19,17 @@ APlayerCharacter::APlayerCharacter()
 	Camera -> SetupAttachment(GetRootComponent());
 }
 
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
@@ -54,30 +65,34 @@ void APlayerCharacter::BeginPlay()
 
 
 
-void APlayerCharacter::Shoot()
+
+void APlayerCharacter::MainAction()
 {
 	if (not CurrentWeapon)
 	{
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Player shoots"));
-	CurrentWeapon -> Fire(Camera -> GetForwardVector(), Camera -> GetComponentLocation());
+	CurrentWeapon -> MainAction(Camera -> GetForwardVector(), Camera -> GetComponentLocation());
 }
 
 
 
-
-// Called every frame
-void APlayerCharacter::Tick(float DeltaTime)
+void APlayerCharacter::Dash(const FInputActionValue& Value)
 {
-	Super::Tick(DeltaTime);
-
+	if (not bIsDashing)
+	{
+		bIsDashing = true;
+		
+		FVector CurrentVelocity = GetVelocity();
+		CurrentVelocity = FVector(CurrentVelocity.X * DashPower, CurrentVelocity.Y * DashPower, 0);
+		LaunchCharacter(CurrentVelocity, false, false);
+		
+		GetWorldTimerManager().SetTimer(DashDelayTimerHandle, this, &APlayerCharacter::DashDelayOver, DashDelay, false);
+	}
 }
 
-// Called to bind functionality to input
-void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APlayerCharacter::DashDelayOver()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	bIsDashing = false;
 }
-

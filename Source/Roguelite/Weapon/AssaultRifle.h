@@ -24,5 +24,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 public:
-	virtual void Fire(FVector CameraForwardVector, FVector CameraLocation) override;
+	virtual void MainAction(FVector CameraForwardVector, FVector CameraLocation) override;
+	
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ABullet> BulletClass = nullptr;
 };

@@ -31,28 +31,19 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-void AWeapon::Fire(FVector CameraForwardVector, FVector CameraLocation)
+void AWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocation)
 {
-	if (not BulletClass)
+	if (not bWeaponCooling)
 	{
-		return;
+		bWeaponCooling = true;
+		AttackRateCooldown = 1 / AttackRate;
+		
+		GetWorldTimerManager().SetTimer(AttackRateTimerHandle, this, &AWeapon::FireRateDelayOver, AttackRateCooldown, false);
 	}
-	
-	UWorld* const World = GetWorld();
-	if (not World)
-	{
-		return;
-	}
-	
-	FRotator SpawnRotation = CameraForwardVector.Rotation();
-	FVector SpawnLocation = CameraLocation + CameraForwardVector * 70.0;
-	
-	
-	
-	FActorSpawnParameters ActorSpawnParams;
-	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
-	UE_LOG(LogTemp, Warning, TEXT("Bullet Spawned"));
-	World -> SpawnActor<ABullet>(BulletClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+}
+
+void AWeapon::FireRateDelayOver()
+{
+	bWeaponCooling = false;
 }
 

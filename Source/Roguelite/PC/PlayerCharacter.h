@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "Roguelite/Weapon/Weapon.h"
@@ -39,18 +40,27 @@ protected:
 	UCameraComponent* Camera = nullptr;
 	
 public:
-	// Current design allows for 3 weapons. 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
-	TArray<AWeapon*> Weapons;
-	
+	// Current design allows for 1 weapon. 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	AWeapon* CurrentWeapon = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> StartingWeapon = nullptr;
 	
+protected:
+	bool bIsDashing = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
+	float DashPower = 10.f;
+	
+	FTimerHandle DashDelayTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
+	float DashDelay = 0.5f;
+	void DashDelayOver();
+	
 public:
-	void Shoot();
+	void MainAction();
+	
+	void Dash(const FInputActionValue& Value);
 	
 	
 };

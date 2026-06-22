@@ -43,7 +43,7 @@ void APCController::SetupInputComponent()
 	
 	EnhancedInputComponent -> BindAction(IADash.Get(), ETriggerEvent::Triggered, this, &APCController::Dash);
 	
-	EnhancedInputComponent -> BindAction(IAShoot.Get(), ETriggerEvent::Triggered, this, &APCController::Shoot);
+	EnhancedInputComponent -> BindAction(IAMainAction.Get(), ETriggerEvent::Triggered, this, &APCController::MainAction);
 }
 
 
@@ -72,11 +72,6 @@ void APCController::AddYawInput(float Val)
 void APCController::AddPitchInput(float Val)
 {
 	Super::AddPitchInput(Val * VerticalSensitivity);
-}
-
-void APCController::DashDelayOver()
-{
-	bIsDashing = false;
 }
 
 
@@ -120,20 +115,11 @@ void APCController::JumpEnd()
 
 void APCController::Dash(const FInputActionValue& Value)
 {
-	if (not bIsDashing)
-	{
-		bIsDashing = true;
-		
-		FVector CurrentVelocity = FPSCharacter -> GetVelocity();
-		CurrentVelocity = FVector(CurrentVelocity.X * DashPower, CurrentVelocity.Y * DashPower, 0);
-		FPSCharacter -> LaunchCharacter(CurrentVelocity, false, false);
-		
-		GetWorldTimerManager().SetTimer(DashDelayTimerHandle, this, &APCController::DashDelayOver, DashDelay, false);
-	}
+	FPSCharacter -> Dash(Value);
 }
 
-void APCController::Shoot()
+void APCController::MainAction()
 {
-	FPSCharacter -> Shoot();
+	FPSCharacter -> MainAction();
 }
 

@@ -41,14 +41,7 @@ public:
 	virtual void AddPitchInput(float Val) override;
 	
 protected:
-	bool bIsDashing = false;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
-	float DashPower = 10.f;
-	
-	FTimerHandle DashDelayTimerHandle;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
-	float DashDelay = 0.5f;
-	void DashDelayOver();
+
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
@@ -66,8 +59,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Action", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> IADash = nullptr;
 	
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Action", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> IAShoot = nullptr;
+	TObjectPtr<UInputAction> IAMainAction = nullptr;
 	
 protected:
 	void Move(const FInputActionValue& Value);
@@ -78,5 +72,5 @@ protected:
 	
 	void Dash(const FInputActionValue& Value);
 	
-	void Shoot();
+	void MainAction();
 };
