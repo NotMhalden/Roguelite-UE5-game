@@ -63,12 +63,12 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	// Trace origin / direction
 	const FVector TraceStart = CameraLocation;
 	const FVector Direction = CameraForwardVector;
-	const FVector TraceEnd = TraceStart + Direction * 4000.f;
+	const FVector TraceEnd = TraceStart + Direction * 5000.f;
 	
 	// Prepare collision params
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
-	QueryParams.bTraceComplex = true;
+	QueryParams.bTraceComplex = false;
 	QueryParams.bReturnPhysicalMaterial = true;
 	
 	// Perform trace
