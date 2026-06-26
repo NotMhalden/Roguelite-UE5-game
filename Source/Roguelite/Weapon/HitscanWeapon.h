@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Weapon.generated.h"
+#include "HitscanWeapon.generated.h"
 
-class ABullet;
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FGetCameraForwardVectorDelegate, FVector /*CameraForwardVector */);
@@ -14,13 +13,13 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FGetCameraForwardVectorDelegate, FVector /*C
 inline FGetCameraForwardVectorDelegate GetCameraForwardVectorDelegate;
 
 UCLASS()
-class ROGUELITE_API AWeapon : public AActor
+class ROGUELITE_API AHitscanWeapon : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AWeapon();
+	AHitscanWeapon();
 
 protected:
 	// Called when the game starts or when spawned
@@ -51,4 +50,8 @@ protected:
 	FTimerHandle AttackRateTimerHandle;
 	bool bWeaponCooling = false;
 	float AttackRateCooldown = 0.1f;
+	
+	//ray casting for shooting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Visibility;
 };

@@ -4,16 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "HitscanWeapon.h"
-#include "AssaultRifle.generated.h"
+#include "ProjectileWeapon.generated.h"
+
+class ABullet;
+
 
 UCLASS()
-class ROGUELITE_API AAssaultRifle : public AHitscanWeapon
+class ROGUELITE_API AProjectileWeapon : public AHitscanWeapon
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AAssaultRifle();
+	AProjectileWeapon();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,4 +28,8 @@ public:
 	
 public:
 	virtual void MainAction(FVector CameraForwardVector, FVector CameraLocation) override;
+	
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ABullet> BulletClass = nullptr;
 };

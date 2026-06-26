@@ -6,7 +6,7 @@
 #include "InputActionValue.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
-#include "Roguelite/Weapon/Weapon.h"
+#include "Roguelite/Weapon/HitscanWeapon.h"
 #include "PlayerCharacter.generated.h"
 
 class APCController;
@@ -42,10 +42,10 @@ protected:
 public:
 	// Current design allows for 1 weapon. 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
-	AWeapon* CurrentWeapon = nullptr;
+	AHitscanWeapon* CurrentWeapon = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AWeapon> StartingWeapon = nullptr;
+	TSubclassOf<AHitscanWeapon> StartingWeapon = nullptr;
 	
 protected:
 	bool bIsDashing = false;

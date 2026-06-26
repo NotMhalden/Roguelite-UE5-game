@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Roguelite/Weapon/Weapon.h"
+#include "Roguelite/Weapon/HitscanWeapon.h"
 #include "Bullet.generated.h"
 
 

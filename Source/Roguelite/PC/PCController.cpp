@@ -4,7 +4,8 @@
 #include "PCController.h"
 
 #include "PlayerCharacter.h"
-#include "Roguelite/Weapon/Weapon.h"
+#include "Engine/LocalPlayer.h"
+#include "Roguelite/Weapon/HitscanWeapon.h"
 
 APCController::APCController()
 {

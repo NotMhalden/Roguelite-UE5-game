@@ -40,7 +40,8 @@ public:
 	
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
-	int32 Health = 100;
+	int32 MaxHealth = 100;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
-	int32 MaxHealth = Health;
+	int32 Health = MaxHealth;
+
 };

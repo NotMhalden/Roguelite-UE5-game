@@ -3,8 +3,10 @@
 
 #include "PlayerCharacter.h"
 
+#include "TimerManager.h"
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
-#include "Roguelite/Weapon/Weapon.h"
+#include "Roguelite/Weapon/HitscanWeapon.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -55,7 +57,7 @@ void APlayerCharacter::BeginPlay()
 		FVector Location = WeaponPoint -> GetRelativeLocation();
 		FRotator Rotation(0.0f, 0.0f, 0.0f);
 		
-		CurrentWeapon = GetWorld() -> SpawnActor<AWeapon>(StartingWeapon, Location, Rotation);
+		CurrentWeapon = GetWorld() -> SpawnActor<AHitscanWeapon>(StartingWeapon, Location, Rotation);
 		
 		FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepRelative, true);
 		CurrentWeapon -> AttachToComponent(Camera, AttachmentRules);
@@ -72,7 +74,7 @@ void APlayerCharacter::MainAction()
 	{
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Player shoots"));
+	// UE_LOG(LogTemp, Warning, TEXT("Player shoots"));
 	CurrentWeapon -> MainAction(Camera -> GetForwardVector(), Camera -> GetComponentLocation());
 }
 
