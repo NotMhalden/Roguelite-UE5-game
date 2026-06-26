@@ -15,21 +15,24 @@ void APCController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	
+	
 
-	UEnhancedInputLocalPlayerSubsystem* EnhancedInputSybsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	if (not EnhancedInputSybsystem)
+	UEnhancedInputLocalPlayerSubsystem* InputLocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	if (not InputLocalPlayerSubsystem)
 	{
-		
+		UE_LOG(LogTemp, Warning, TEXT("Enhanced input system failed"))
+		return;
 	}
 	
 	// Clear
-	EnhancedInputSybsystem -> ClearAllMappings();
-	EnhancedInputSybsystem -> AddMappingContext(MainIMC, 0);
+	InputLocalPlayerSubsystem -> ClearAllMappings();
+	InputLocalPlayerSubsystem -> AddMappingContext(MainIMC, 0);
 	
 	
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 	if (not EnhancedInputComponent)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Enhanced input component failed"))
 		return;
 	}
 	
