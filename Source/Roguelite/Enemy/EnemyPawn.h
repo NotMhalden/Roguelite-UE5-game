@@ -27,7 +27,7 @@ public:
 	
 	
 	void TakeDamage(int DamageTaken);
-	
+		
 	void Death();
 	
 public:
