@@ -3,6 +3,8 @@
 
 #include "EnemyPawn.h"
 
+#include "Components/StaticMeshComponent.h"
+
 
 // Sets default values
 AEnemyPawn::AEnemyPawn()
@@ -11,7 +13,7 @@ AEnemyPawn::AEnemyPawn()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Component"));
-	CapsuleComponent->InitCapsuleSize(34.0f, 88.0f);
+	CapsuleComponent -> InitCapsuleSize(34.0f, 88.0f);
 	CapsuleComponent -> SetupAttachment(GetRootComponent());
 	RootComponent = CapsuleComponent;
 	
@@ -35,11 +37,6 @@ void AEnemyPawn::Tick(float DeltaTime)
 }
 
 
-// Called to bind functionality to input
-void AEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
 
 
 void AEnemyPawn::TakeDamage(int DamageTaken)
