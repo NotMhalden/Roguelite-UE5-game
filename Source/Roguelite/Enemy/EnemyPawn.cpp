@@ -15,9 +15,11 @@ AEnemyPawn::AEnemyPawn()
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Component"));
 	CapsuleComponent -> InitCapsuleSize(34.0f, 88.0f);
 	CapsuleComponent -> SetupAttachment(GetRootComponent());
+	CapsuleComponent -> SetCanEverAffectNavigation(false);
 	RootComponent = CapsuleComponent;
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh -> SetCanEverAffectNavigation(false);
 	Mesh -> SetupAttachment(CapsuleComponent);
 }
 

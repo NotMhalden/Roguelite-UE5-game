@@ -7,7 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "EnemyPawn.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class ROGUELITE_API AEnemyPawn : public APawn
 {
 	GENERATED_BODY()
@@ -38,9 +38,9 @@ public:
 	UCapsuleComponent* CapsuleComponent = nullptr;
 	
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxHealth = 100;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 Health = MaxHealth;
 
 };
