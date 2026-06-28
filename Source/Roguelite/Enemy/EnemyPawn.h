@@ -7,6 +7,10 @@
 #include "GameFramework/Pawn.h"
 #include "EnemyPawn.generated.h"
 
+
+DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate)
+
+
 UCLASS(Abstract)
 class ROGUELITE_API AEnemyPawn : public APawn
 {
@@ -29,6 +33,8 @@ public:
 	void TakeDamage(int DamageTaken);
 		
 	void Death();
+	
+	FOnDeathDelegate OnDeathDelegate;
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

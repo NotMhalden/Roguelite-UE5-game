@@ -53,6 +53,10 @@ void AEnemyPawn::TakeDamage(int DamageTaken)
 
 void AEnemyPawn::Death()
 {
+	if (OnDeathDelegate.IsBound())
+	{
+		OnDeathDelegate.Broadcast();
+	}
 	Destroy();
 }
 

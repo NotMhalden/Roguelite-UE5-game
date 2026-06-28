@@ -31,7 +31,7 @@ void AEncounterManager::Tick(float DeltaTime)
 
 void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 {
-	if (ActiveEnemyClasses.IsEmpty())
+	if (ActiveEnemyClasses.IsEmpty() or AmountToSpawn <= 0)
 	{
 		return;
 	}
@@ -55,16 +55,25 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		
 		int32 EnemyClassIndexToSpawn = FMath::RandRange(0, ActiveEnemyClasses.Num() - 1);
 		TSubclassOf<AEnemyPawn> EnemyClassToSpawn = ActiveEnemyClasses[EnemyClassIndexToSpawn];
-		GetWorld() -> SpawnActor(EnemyClassToSpawn.Get(), &DestinationData.Location);
 		
+		AActor* SpawnedActor = GetWorld() -> SpawnActor(EnemyClassToSpawn.Get(), &DestinationData.Location);
+		AEnemyPawn* SpawnedEnemy = Cast<AEnemyPawn>(SpawnedActor);
+		if (not SpawnedEnemy)
+		{
+			continue;
+		}
+		SpawnedEnemy -> OnDeathDelegate.AddUObject(this, &AEncounterManager::OnEnemyDeath);
+		
+		AmountOfEnemies++;
 	}
-
-	
-	
 }
 
 
 void AEncounterManager::OnEnemyDeath()
 {
+	if (AmountOfEnemies > 0)
+	{
+		AmountOfEnemies -= 1;
+	}
 }
 
