@@ -34,15 +34,15 @@ protected:
 	TSubclassOf<APCController> PPControllerClass = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* WeaponPoint = nullptr;
+	TObjectPtr<UStaticMeshComponent> WeaponPoint = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* Camera = nullptr;
+	TObjectPtr<UCameraComponent> Camera = nullptr;
 	
 public:
 	// Current design allows for 1 weapon. 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
-	AHitscanWeapon* CurrentWeapon = nullptr;
+	TObjectPtr<AHitscanWeapon> CurrentWeapon = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AHitscanWeapon> StartingWeapon = nullptr;

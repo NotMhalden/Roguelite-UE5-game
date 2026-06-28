@@ -28,7 +28,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UFloatingPawnMovement* MovementComponent;
+	TObjectPtr<UFloatingPawnMovement> MovementComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxSpeed = 1000;

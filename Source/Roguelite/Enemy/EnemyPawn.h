@@ -38,10 +38,10 @@ public:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh = nullptr;
+	TObjectPtr<UStaticMeshComponent> Mesh = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UCapsuleComponent* CapsuleComponent = nullptr;
+	TObjectPtr<UCapsuleComponent> CapsuleComponent = nullptr;
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))

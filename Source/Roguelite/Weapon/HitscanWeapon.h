@@ -37,7 +37,7 @@ public:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh = nullptr;
+	TObjectPtr<UStaticMeshComponent> Mesh = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
 	int32 Damage = 10;

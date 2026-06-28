@@ -30,5 +30,5 @@ protected:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UStateTreeAIComponent* StateTreeAIComponent = nullptr;
+	TObjectPtr<UStateTreeAIComponent> StateTreeAIComponent = nullptr;
 };

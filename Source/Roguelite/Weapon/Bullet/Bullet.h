@@ -34,11 +34,11 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile | Components", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Mesh = nullptr;
+	TObjectPtr<UStaticMeshComponent> Mesh = nullptr;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile | Components", meta = (AllowPrivateAccess = "true"))
-	USphereComponent* SphereComponent = nullptr;
+	TObjectPtr<USphereComponent> SphereComponent = nullptr;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile | Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
