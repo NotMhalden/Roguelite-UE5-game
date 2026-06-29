@@ -5,6 +5,7 @@
 
 #include "NavigationSystem.h"
 #include "Roguelite/Enemy/EnemyPawn.h"
+#include "Roguelite/PC/PlayerCharacter.h"
 
 
 // Sets default values
@@ -18,6 +19,17 @@ AEncounterManager::AEncounterManager()
 void AEncounterManager::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	const TObjectPtr<APawn> PlayerPawn = GetWorld() -> GetFirstPlayerController() -> GetPawn();
+	if (const TObjectPtr<APlayerCharacter> PlayerCharacterCast = Cast<APlayerCharacter>(PlayerPawn))
+	{
+		PlayerCharacter = PlayerCharacterCast;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Encounter Manager couldn't get player character"))
+	}
+	
 	
 	SpawnEnemies(AmountOfEnemiesToSpawn);
 }
@@ -63,6 +75,7 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 			continue;
 		}
 		SpawnedEnemy -> OnDeathDelegate.AddUObject(this, &AEncounterManager::OnEnemyDeath);
+		SpawnedEnemy -> EncounterManager = this;
 		
 		AmountOfEnemies++;
 	}
@@ -75,5 +88,12 @@ void AEncounterManager::OnEnemyDeath()
 	{
 		AmountOfEnemies -= 1;
 	}
+}
+
+
+
+TObjectPtr<APlayerCharacter> AEncounterManager::GetPlayerCharacter()
+{
+	return PlayerCharacter;
 }
 

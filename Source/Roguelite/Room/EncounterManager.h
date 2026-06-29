@@ -30,13 +30,10 @@ public:
 	
 	void OnEnemyDeath();
 	
+	TObjectPtr<APlayerCharacter> GetPlayerCharacter();
+
 	
-	
-	
-	
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<APlayerCharacter> PlayerCharacter = nullptr;
+public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<AEnemyPawn*> Enemies;
@@ -59,4 +56,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 AmountOfEnemiesToSpawn = 5;
+	
+	
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<APlayerCharacter> PlayerCharacter = nullptr;
 };

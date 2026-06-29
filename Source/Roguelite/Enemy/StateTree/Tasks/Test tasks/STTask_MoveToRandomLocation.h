@@ -20,15 +20,6 @@ class ROGUELITE_API USTTask_MoveToRandomLocation : public UStateTreeTaskBlueprin
 public:
 	USTTask_MoveToRandomLocation(const FObjectInitializer& ObjectInitializer);
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<AEnemyPawn> InEnemy = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<AAIController> AIController = nullptr;
-	
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float RandomLocationMaxDistance = 1500.f;
 
 protected:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context,
@@ -36,4 +27,14 @@ protected:
 	
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 	
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AEnemyPawn> Enemy = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AAIController> AIController = nullptr;
+	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float RandomLocationMaxDistance = 1500.f;
 };

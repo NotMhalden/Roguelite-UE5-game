@@ -31,5 +31,5 @@ public:
 	TObjectPtr<UFloatingPawnMovement> MovementComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
-	int32 MaxSpeed = 1000;
+	float MaxSpeed = 700.f;
 };

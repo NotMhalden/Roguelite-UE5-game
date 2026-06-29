@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIController.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
+#include "Roguelite/Enemy/EnemyPawn.h"
 #include "STTask_ChasePlayer.generated.h"
 
 /**
@@ -24,4 +26,14 @@ protected:
 		const FStateTreeTransitionResult& Transition) override;
 	
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
+	
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AEnemyPawn> Enemy = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AAIController> AIController = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	float AcceptanceRadius = -1.f;
 };

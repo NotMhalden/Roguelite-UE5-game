@@ -8,6 +8,7 @@
 #include "EnemyPawn.generated.h"
 
 
+class AEncounterManager;
 DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate)
 
 
@@ -29,14 +30,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	
-	
 	void TakeDamage(int DamageTaken);
-		
 	void Death();
 	
-	FOnDeathDelegate OnDeathDelegate;
 	
 public:
+	FOnDeathDelegate OnDeathDelegate;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> Mesh = nullptr;
 	
@@ -48,5 +48,7 @@ public:
 	int32 MaxHealth = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 Health = MaxHealth;
-
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AEncounterManager> EncounterManager = nullptr;
 };

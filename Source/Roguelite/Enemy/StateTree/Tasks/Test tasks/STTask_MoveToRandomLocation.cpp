@@ -24,7 +24,7 @@ EStateTreeRunStatus USTTask_MoveToRandomLocation::EnterState(FStateTreeExecution
 	RunStatus = EStateTreeRunStatus::Running;
 	
 	// Checks if there's an enemy, in case of errors
-	if (not InEnemy)
+	if (not Enemy)
 	{
 		UE_LOG(LogTemp, Error, TEXT("InEnemy ptr error"));
 		return RunStatus = EStateTreeRunStatus::Failed;
@@ -47,7 +47,7 @@ EStateTreeRunStatus USTTask_MoveToRandomLocation::EnterState(FStateTreeExecution
 	
 	// Gets a random reachable point within RandomLocationMaxDistance from the InEnemy
 	FNavLocation DestinationData; // The data location itself
-	bool const bIsPointValid = NavSys -> GetRandomReachablePointInRadius(InEnemy -> GetActorLocation(), RandomLocationMaxDistance, DestinationData);
+	bool const bIsPointValid = NavSys -> GetRandomReachablePointInRadius(Enemy -> GetActorLocation(), RandomLocationMaxDistance, DestinationData);
 
 	// Checks if the point is valid or not
 	if (not bIsPointValid)
