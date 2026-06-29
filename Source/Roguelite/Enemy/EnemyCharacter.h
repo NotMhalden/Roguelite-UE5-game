@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/Pawn.h"
-#include "EnemyPawn.generated.h"
+#include "GameFramework/Character.h"
+#include "EnemyCharacter.generated.h"
 
 
 class AEncounterManager;
@@ -13,13 +12,13 @@ DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate)
 
 
 UCLASS(Abstract)
-class ROGUELITE_API AEnemyPawn : public APawn
+class ROGUELITE_API AEnemyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AEnemyPawn();
+	AEnemyCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,12 +35,6 @@ public:
 	
 public:
 	FOnDeathDelegate OnDeathDelegate;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UStaticMeshComponent> Mesh = nullptr;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCapsuleComponent> CapsuleComponent = nullptr;
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))

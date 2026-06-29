@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "EncounterManager.generated.h"
 
-class AEnemyPawn;
+class AEnemyCharacter;
 class APlayerCharacter;
 
 UCLASS()
@@ -36,12 +36,12 @@ public:
 public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TArray<AEnemyPawn*> Enemies;
+	TArray<AEnemyCharacter*> Enemies;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 AmountOfEnemies = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TArray<TSubclassOf<AEnemyPawn>> ActiveEnemyClasses;
+	TArray<TSubclassOf<AEnemyCharacter>> ActiveEnemyClasses;
 	
 	
 	

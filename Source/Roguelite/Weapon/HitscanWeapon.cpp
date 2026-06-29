@@ -8,7 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
-#include "Roguelite/Enemy/EnemyPawn.h"
+#include "Roguelite/Enemy/EnemyCharacter.h"
 
 
 // Sets default values
@@ -96,7 +96,7 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 		return;
 	}
 	
-	if (AEnemyPawn* HitPawn = Cast<AEnemyPawn>(HitActor))
+	if (AEnemyCharacter* HitPawn = Cast<AEnemyCharacter>(HitActor))
 	{
 		int32 CalculatedDamage = Damage;
 		HitPawn -> TakeDamage(CalculatedDamage);

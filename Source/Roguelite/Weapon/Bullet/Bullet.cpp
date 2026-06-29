@@ -5,7 +5,7 @@
 
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "Roguelite/Enemy/EnemyPawn.h"
+#include "Roguelite/Enemy/EnemyCharacter.h"
 
 
 // Sets default values
@@ -51,7 +51,7 @@ void ABullet::Tick(float DeltaTime)
 void ABullet::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (auto* EnemyPlayer = Cast<AEnemyPawn>(OtherActor))
+	if (auto* EnemyPlayer = Cast<AEnemyCharacter>(OtherActor))
 	{
 		EnemyPlayer -> TakeDamage(BulletDamage);
 	}

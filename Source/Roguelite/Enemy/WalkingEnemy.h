@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyPawn.h"
+#include "EnemyCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "WalkingEnemy.generated.h"
 
 class UFloatingPawnMovement;
 
 UCLASS()
-class ROGUELITE_API AWalkingEnemy : public AEnemyPawn
+class ROGUELITE_API AWalkingEnemy : public AEnemyCharacter
 {
 	GENERATED_BODY()
 
@@ -26,9 +27,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void PossessedBy(AController* NewController) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UFloatingPawnMovement> MovementComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	float MaxSpeed = 700.f;

@@ -4,7 +4,8 @@
 #include "EncounterManager.h"
 
 #include "NavigationSystem.h"
-#include "Roguelite/Enemy/EnemyPawn.h"
+#include "Components/CapsuleComponent.h"
+#include "Roguelite/Enemy/EnemyCharacter.h"
 #include "Roguelite/PC/PlayerCharacter.h"
 
 
@@ -59,17 +60,28 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 	FNavLocation DestinationData;
 	for (int32 i = 0; i < AmountToSpawn; i++)
 	{
-		bool const bIsPointValid = NavSys -> GetRandomPoint(DestinationData);
+		bool const bIsPointValid = NavSys -> GetRandomPointInNavigableRadius(GetActorLocation(), 5000.f, DestinationData);
 		if (not bIsPointValid)
 		{
 			continue;
 		}
 		
 		int32 EnemyClassIndexToSpawn = FMath::RandRange(0, ActiveEnemyClasses.Num() - 1);
-		TSubclassOf<AEnemyPawn> EnemyClassToSpawn = ActiveEnemyClasses[EnemyClassIndexToSpawn];
+		TSubclassOf<AEnemyCharacter> EnemyClassToSpawn = ActiveEnemyClasses[EnemyClassIndexToSpawn];
+		if (not EnemyClassToSpawn)
+		{
+			continue;
+		}
+		
+		
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		
+		const int32 CapsuleHalfHeight = EnemyClassToSpawn.GetDefaultObject() -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
+		DestinationData.Location = FVector(DestinationData.Location.X, DestinationData.Location.Y, DestinationData.Location.Z + CapsuleHalfHeight);
 		
 		AActor* SpawnedActor = GetWorld() -> SpawnActor(EnemyClassToSpawn.Get(), &DestinationData.Location);
-		AEnemyPawn* SpawnedEnemy = Cast<AEnemyPawn>(SpawnedActor);
+		AEnemyCharacter* SpawnedEnemy = Cast<AEnemyCharacter>(SpawnedActor);
 		if (not SpawnedEnemy)
 		{
 			continue;

@@ -2,7 +2,6 @@
 
 
 #include "WalkingEnemy.h"
-#include "GameFramework/FloatingPawnMovement.h"
 
 
 // Sets default values
@@ -11,8 +10,7 @@ AWalkingEnemy::AWalkingEnemy()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Movement Component"));
-	MovementComponent -> MaxSpeed = MaxSpeed;
+	GetCharacterMovement() -> MaxWalkSpeed = MaxSpeed;
 	
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }

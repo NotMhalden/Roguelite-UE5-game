@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
-#include "Roguelite/Enemy/EnemyPawn.h"
+#include "Roguelite/Enemy/EnemyCharacter.h"
 #include "STTask_ChasePlayer.generated.h"
 
 /**
@@ -30,7 +30,7 @@ protected:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<AEnemyPawn> Enemy = nullptr;
+	TObjectPtr<AEnemyCharacter> Enemy = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AAIController> AIController = nullptr;
 	
