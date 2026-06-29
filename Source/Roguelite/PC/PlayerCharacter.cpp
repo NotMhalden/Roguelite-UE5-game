@@ -98,3 +98,43 @@ void APlayerCharacter::DashDelayOver()
 {
 	bIsDashing = false;
 }
+
+
+void APlayerCharacter::SetHealth(int32 NewHealth)
+{
+	Health = NewHealth;
+}
+
+
+
+int32 APlayerCharacter::GetHealth()
+{
+	return Health;
+}
+
+
+
+void APlayerCharacter::SetMaxHealth(int32 NewMaxHealth)
+{
+	MaxHealth = NewMaxHealth;
+}
+
+
+
+int32 APlayerCharacter::GetMaxHealth()
+{
+	return MaxHealth;
+}
+
+
+
+void APlayerCharacter::TakeDamage(int32 NewHealth)
+{
+	SetHealth(GetHealth() - NewHealth);
+}
+
+
+
+void APlayerCharacter::Death()
+{
+}

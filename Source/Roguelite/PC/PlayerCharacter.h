@@ -57,6 +57,21 @@ protected:
 	float DashDelay = 0.5f;
 	void DashDelayOver();
 	
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	int32 MaxHealth = 100;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	int32 Health = MaxHealth;
+	
+	void SetHealth(int32 NewHealth);
+	int32 GetHealth();
+	
+	void SetMaxHealth(int32 NewMaxHealth);
+	int32 GetMaxHealth();
+	
+	void TakeDamage(int32 NewHealth);
+	void Death();
+	
 public:
 	void MainAction();
 	
