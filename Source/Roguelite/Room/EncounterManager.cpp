@@ -6,6 +6,7 @@
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
+#include "Roguelite/Enemy/EnemyDelegates.h"
 #include "Roguelite/PC/PlayerCharacter.h"
 
 
@@ -14,6 +15,7 @@ AEncounterManager::AEncounterManager()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	OnEnemyDeathDelegate.AddUObject(this, &AEncounterManager::OnEnemyDeath);
 }
 
 // Called when the game starts or when spawned
@@ -30,7 +32,6 @@ void AEncounterManager::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Encounter Manager couldn't get player character"))
 	}
-	
 	
 	SpawnEnemies(AmountOfEnemiesToSpawn);
 }
@@ -86,9 +87,7 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		{
 			continue;
 		}
-		SpawnedEnemy -> OnDeathDelegate.AddUObject(this, &AEncounterManager::OnEnemyDeath);
 		SpawnedEnemy -> EncounterManager = this;
-		
 		AmountOfEnemies++;
 	}
 }

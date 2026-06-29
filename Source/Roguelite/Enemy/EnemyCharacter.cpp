@@ -2,6 +2,8 @@
 
 
 #include "EnemyCharacter.h"
+
+#include "EnemyDelegates.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
@@ -50,9 +52,9 @@ void AEnemyCharacter::TakeDamage(int DamageTaken)
 
 void AEnemyCharacter::Death()
 {
-	if (OnDeathDelegate.IsBound())
+	if (OnEnemyDeathDelegate.IsBound())
 	{
-		OnDeathDelegate.Broadcast();
+		OnEnemyDeathDelegate.Broadcast();
 	}
 	Destroy();
 }

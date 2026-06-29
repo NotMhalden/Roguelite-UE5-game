@@ -9,6 +9,9 @@
 class AEnemyCharacter;
 class APlayerCharacter;
 
+
+
+
 UCLASS()
 class ROGUELITE_API AEncounterManager : public AActor
 {

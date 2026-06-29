@@ -8,8 +8,6 @@
 
 
 class AEncounterManager;
-DECLARE_MULTICAST_DELEGATE(FOnDeathDelegate)
-
 
 UCLASS(Abstract)
 class ROGUELITE_API AEnemyCharacter : public ACharacter
@@ -34,9 +32,6 @@ public:
 	
 	
 public:
-	FOnDeathDelegate OnDeathDelegate;
-	
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxHealth = 75;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
