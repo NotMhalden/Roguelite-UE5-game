@@ -6,8 +6,22 @@
 #include "GameFramework/Character.h"
 #include "EnemyCharacter.generated.h"
 
-
 class AEncounterManager;
+
+
+
+UENUM(BlueprintType)
+enum class EEnemyElevationPositioning: uint8
+{
+	EEEP_LowBelow		UMETA(DisplayName="Low Below"),
+	EEEP_Below			UMETA(DisplayName="Below"),
+	EEEP_SameLevel		UMETA(DisplayName="Same Level"),
+	EEEP_Above			UMETA(DisplayName="Above"),
+	EEEP_HighAbove		UMETA(DisplayName="High Above"),
+	EEEP_Any			UMETA(DisplayName="Any")
+};
+
+
 
 UCLASS(Abstract)
 class ROGUELITE_API AEnemyCharacter : public ACharacter
@@ -39,4 +53,11 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AEncounterManager> EncounterManager = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", 
+		ClampMin = "0", ClampMax = "100", UIMin = "0", UIMax = "100"))
+	TMap<EEnemyElevationPositioning, int32> EnemyPositioningNurtureChance;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	EEnemyElevationPositioning CurrentPositioning = EEnemyElevationPositioning::EEEP_SameLevel;
 };

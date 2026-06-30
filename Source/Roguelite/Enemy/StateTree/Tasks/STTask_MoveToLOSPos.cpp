@@ -78,7 +78,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 	const FVector TraceEnd = FVector(
 				PlayerCharacter -> GetActorLocation().X, 
 				PlayerCharacter -> GetActorLocation().Y, 
-			PlayerCharacter -> GetActorLocation().Z + PlayerCharacter -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight()
+				PlayerCharacter -> GetActorLocation().Z
 			);
 	
 	bool bFailedHit = false;
@@ -135,6 +135,8 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 	
 	return (RunStatus = EStateTreeRunStatus::Failed);
 }
+
+
 
 EStateTreeRunStatus USTTask_MoveToLOSPos::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {

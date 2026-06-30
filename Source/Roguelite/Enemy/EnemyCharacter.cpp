@@ -19,7 +19,24 @@ AEnemyCharacter::AEnemyCharacter()
 	
 	GetMesh() -> SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	
+	TArray<EEnemyElevationPositioning> EnemyPositionKeys;
+	EnemyPositioningNurtureChance.GetKeys(EnemyPositionKeys);
 	
+	const UEnum* EnemyPositionEnum = StaticEnum<EEnemyElevationPositioning>();
+	for (int32 EnumIndex = 0; EnumIndex < EnemyPositionEnum -> NumEnums() -1; EnumIndex++)
+	{
+		auto EnumValue = StaticCast<EEnemyElevationPositioning>(EnemyPositionEnum -> GetValueByIndex(EnumIndex));
+		if (EnemyPositionKeys.IsEmpty())
+		{
+			EnemyPositioningNurtureChance.Add(EnumValue, 0);
+			continue;
+		}
+		if (not EnemyPositionKeys.Contains(EnumValue))
+		{
+			EnemyPositioningNurtureChance.Add(EnumValue, 0);
+			continue;
+		}
+	}
 }
 
 

@@ -87,6 +87,27 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		{
 			continue;
 		}
+		
+		if (not SpawnedEnemy -> EnemyPositioningNurtureChance.IsEmpty())
+		{
+			const int32 EnemyPositioningNurtureChance = FMath::RandRange(0, 100);
+			
+			TArray<EEnemyElevationPositioning> Positionings;
+			SpawnedEnemy -> EnemyPositioningNurtureChance.GetKeys(Positionings);
+			
+			int32 PositionChance = 0;
+			for (EEnemyElevationPositioning CurrentPositioning: Positionings)
+			{
+				PositionChance += SpawnedEnemy -> EnemyPositioningNurtureChance[CurrentPositioning];
+				if (PositionChance >= EnemyPositioningNurtureChance)
+				{
+					SpawnedEnemy -> CurrentPositioning = CurrentPositioning;
+					break;
+				}
+			}
+		}
+		
+		
 		SpawnedEnemy -> EncounterManager = this;
 		AmountOfEnemies++;
 	}
