@@ -68,6 +68,10 @@ EStateTreeRunStatus USTTask_ChasePlayer::EnterState(FStateTreeExecutionContext& 
 
 EStateTreeRunStatus USTTask_ChasePlayer::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {
+	if (not AIController)
+	{
+		return RunStatus = EStateTreeRunStatus::Failed;
+	}
 	if (AIController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
 	{
 		return (RunStatus = EStateTreeRunStatus::Succeeded);

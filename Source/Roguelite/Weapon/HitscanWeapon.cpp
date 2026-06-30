@@ -52,7 +52,7 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 		return;
 	}
 		
-	UWorld* const World = GetWorld();
+	const UWorld* World = GetWorld();
 	if (not World)
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Cant get world"))
@@ -77,7 +77,7 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	// UE_LOG(LogTemp, Warning, TEXT("Hitscan shot"))
 	
 	// No hit
-	if (!bDidHit)
+	if (not bDidHit)
 	{
 		DrawDebugLine(World, TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 0.5f);
 		return;

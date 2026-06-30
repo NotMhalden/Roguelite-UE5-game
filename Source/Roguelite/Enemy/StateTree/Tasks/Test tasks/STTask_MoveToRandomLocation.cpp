@@ -69,6 +69,10 @@ EStateTreeRunStatus USTTask_MoveToRandomLocation::Tick(FStateTreeExecutionContex
 {
 	// UE_LOG(LogTemp, Warning, TEXT("MoveStatus: %d"), (int32)AIController->GetMoveStatus());
 	
+	if (not AIController)
+	{
+		return RunStatus = EStateTreeRunStatus::Failed;
+	}
 	if (AIController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
 	{
 		return (RunStatus = EStateTreeRunStatus::Succeeded);
