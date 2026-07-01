@@ -34,9 +34,9 @@ public:
 	
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float MaxCheckDistance = 1800.f;
+	float MaxCheckDistance = 1000.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float MinimumRange = 800.f;
+	float MinimumRange = 600.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 AttemptsToCheck = 10;

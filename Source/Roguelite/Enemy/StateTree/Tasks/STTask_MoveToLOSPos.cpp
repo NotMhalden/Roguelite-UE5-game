@@ -81,11 +81,18 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 				PlayerCharacter -> GetActorLocation().Z
 			);
 	
+	
+	float BestScore = 0.f;
+	FVector BestPosition = FVector(0.f,0.f,0.f);
+	
+	// Looks AttemptsToCheck times to see if there's a valid place the enemy can be, and see the player
 	bool bFailedHit = false;
 	for (int32 AttemptNumber = 0; AttemptNumber < AttemptsToCheck; AttemptNumber++)
 	{
 		FNavLocation DestinationData; // The data location itself
+		float PositionScore = 0;
 		bool bIsPointValid = false;
+		
 		if(bFailedHit)
 		{
 			bIsPointValid = NavSys -> GetRandomReachablePointInRadius(PlayerCharacter -> GetActorLocation(), MaxCheckDistance*3, DestinationData);
@@ -120,20 +127,51 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 		{
 			if (FVector::Distance(TraceEnd, TraceStart) < MinimumRange)
 			{
-				DrawDebugLine(World, TraceStart, TraceEnd, FColor::Green, false, 2.0f, 0, 0.5f);
+				// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Green, false, 2.0f, 0, 0.5f);
 				bFailedHit = true;
 				continue;
 			}
-			
-			DrawDebugLine(World, TraceStart, TraceEnd, FColor::Purple, false, 2.0f, 0, 0.5f);
-			AIController -> MoveToLocation(DestinationData.Location);
-			return (RunStatus = EStateTreeRunStatus::Running);
+			else
+			{
+				float HeightGap =
+						  DestinationData.Location.Z
+						- PlayerCharacter -> GetActorLocation().Z
+						+ PlayerCharacter -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
+				
+				int32 IdealElevation = (int32)Enemy -> CurrentPositioning - (int32)EEnemyElevationPositioning::EEEP_SameLevel;
+				float IdealHeight = FMath::Abs(HeightGap - IdealElevation * EncounterManager -> PositioningHeightThreshold);
+				float DistanceFromIdeal = FMath::Max(0.f, IdealHeight - EncounterManager -> PositioningHeightThreshold);
+				
+				float ScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromIdeal/ EncounterManager -> PositioningHeightThreshold);
+				PositionScore = 40 * ScoreFalloffFactor;
+				
+				if (PositionScore >= BestScore)
+				{
+					BestScore = PositionScore;
+					BestPosition = DestinationData.Location;
+				}
+				bFailedHit = false;
+				continue;
+			}
 		}
 		bFailedHit = true;
 	}
 	
 	
-	return (RunStatus = EStateTreeRunStatus::Failed);
+	if (not BestScore)
+	{
+		return (RunStatus = EStateTreeRunStatus::Failed);
+	}
+	if (BestPosition.IsZero())
+	{
+		return (RunStatus = EStateTreeRunStatus::Failed);
+	}
+	
+	
+	DrawDebugLine(World, BestPosition, TraceEnd, FColor::Purple, false, 2.0f, 0, 0.5f);
+	AIController -> MoveToLocation(BestPosition);
+	
+	return (RunStatus = EStateTreeRunStatus::Running);
 }
 
 
