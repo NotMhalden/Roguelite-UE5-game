@@ -95,7 +95,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 		
 		if(bFailedHit)
 		{
-			bIsPointValid = NavSys -> GetRandomReachablePointInRadius(PlayerCharacter -> GetActorLocation(), MaxCheckDistance*3, DestinationData);
+			bIsPointValid = NavSys -> GetRandomReachablePointInRadius(PlayerCharacter -> GetActorLocation(), MaxCheckDistance*2, DestinationData);
 		}
 		else
 		{
@@ -136,14 +136,17 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 				float HeightGap =
 						  DestinationData.Location.Z
 						- PlayerCharacter -> GetActorLocation().Z
-						+ PlayerCharacter -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
+						- PlayerCharacter -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
 				
 				int32 IdealElevation = (int32)Enemy -> CurrentPositioning - (int32)EEnemyElevationPositioning::EEEP_SameLevel;
 				float IdealHeight = FMath::Abs(HeightGap - IdealElevation * EncounterManager -> PositioningHeightThreshold);
-				float DistanceFromIdeal = FMath::Max(0.f, IdealHeight - EncounterManager -> PositioningHeightThreshold);
+				float DistanceFromIdeal = FMath::Max(0.f, IdealHeight - EncounterManager -> PositioningHeightPlateau/2);
 				
-				float ScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromIdeal/ EncounterManager -> PositioningHeightThreshold);
+				float ScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromIdeal / EncounterManager -> PositioningHeightThreshold);
 				PositionScore = 40 * ScoreFalloffFactor;
+				
+				// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Cyan, false, 2.0f, 0, 0.5f);
+				
 				
 				if (PositionScore >= BestScore)
 				{

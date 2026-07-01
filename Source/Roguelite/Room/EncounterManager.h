@@ -63,6 +63,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0.f))
 	float PositioningHeightThreshold = 150.f;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0.f))
+	float PositioningHeightPlateau = PositioningHeightThreshold/2;
+	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<APlayerCharacter> PlayerCharacter = nullptr;
