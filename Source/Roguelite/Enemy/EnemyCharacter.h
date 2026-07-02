@@ -74,4 +74,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float TravelDistanceFalloff = 250.f;
+	
 };
