@@ -34,14 +34,12 @@ public:
 	
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	float MaxCheckDistance = 800.f;
+	float MaxCheckDistance = 2500.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float MinimumRange = 600.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int32 AttemptsToCheck = 20;
+	int32 AttemptsToCheck = 30;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Camera;
-	
-
 };

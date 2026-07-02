@@ -54,10 +54,24 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AEncounterManager> EncounterManager = nullptr;
 	
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", 
 		ClampMin = "0", ClampMax = "100", UIMin = "0", UIMax = "100"))
 	TMap<EEnemyElevationPositioning, int32> EnemyPositioningNurtureChance;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	EEnemyElevationPositioning CurrentPositioning = EEnemyElevationPositioning::EEEP_SameLevel;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+		ClampMin = "0", UIMin = "0"))
+	float IdealDistance = 1400.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	ClampMin = "0", UIMin = "0"))
+	float DistancePlateau = IdealDistance/8;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	ClampMin = "0", UIMin = "0"))
+	float DistanceFalloff = IdealDistance/4;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	ClampMin = "0", UIMin = "0"))
+	float TravelDistanceFalloff = 250.f;
 };
