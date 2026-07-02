@@ -3,6 +3,7 @@
 
 #include "STTask_MoveToLOSPos.h"
 
+#include "NavigationPath.h"
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -130,71 +131,106 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 				bFailedHit = true;
 				continue;
 			}
+
+			float PositionScore = 0;
+			
+			
+			// -- Height scoring for position -- 
+			
+			// Gets the height difference between the possible location and the player's feet
+			float HeightGap =
+					  DestinationData.Location.Z
+					- PlayerCharacter -> GetActorLocation().Z - PlayerCharacter -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
+			
+			// Finds out how many EEnemyElevationPositioning the Enemy should be compared to the player
+			int32 IdealElevation = (int32)Enemy -> CurrentPositioning - (int32)EEnemyElevationPositioning::EEEP_SameLevel;
+			
+			// Finds the height difference between the possible point, and the ideal point
+			float IdealHeight = FMath::Abs(HeightGap - IdealElevation * EncounterManager -> PositioningHeightThreshold);
+			
+			// Gets the distance between the position and the plateau
+			float DistanceFromIdealHeight = FMath::Max(0.f, IdealHeight - EncounterManager -> PositioningHeightPlateau);
+			
+			// Applies falloff depending on how far the position is from the ideal
+			float HeightScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromIdealHeight / EncounterManager -> PositioningHeightThreshold);
+			
+			// The position gets its scored multiplied by 40 (out of 100). 
+			// 40 is the weight for height. 
+			// Higher means a position with more correct height matters more
+			PositionScore += 40 * HeightScoreFalloffFactor;
+			
+			// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Cyan, false, 2.0f, 0, 0.5f);
+			
+			
+			
+			
+			// -- Distance scoring for position -- 
+			FVector2D Position2D = FVector2D(DestinationData.Location.X, DestinationData.Location.Y);
+			FVector2D PlayerPosition2D = FVector2D(PlayerCharacter -> GetActorLocation().X, PlayerCharacter -> GetActorLocation().Y);
+			
+			float PositionFromPlayer = (Position2D - PlayerPosition2D).Length();
+			float DistanceFromIdealDistance = FMath::Abs(Enemy -> IdealDistance - PositionFromPlayer);
+			float DistanceFromPlateau = FMath::Max(0.f, DistanceFromIdealDistance - Enemy -> DistancePlateau);
+			float DistanceScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromPlateau / Enemy -> DistanceFalloff);
+			
+			PositionScore += 40 * DistanceScoreFalloffFactor;
+			
+			
+			
+			
+			// -- Travel distance scoring for position -- 
+			float TravelDistance = FVector::Dist2D(DestinationData.Location, Enemy -> GetActorLocation());
+			float TravelDistanceScoreFalloffFactor = FMath::Pow(0.5f, TravelDistance / Enemy -> TravelDistanceFalloff);
+			
+			PositionScore += 20 * TravelDistanceScoreFalloffFactor;
+			
+			
+			// -- Player distance to position scoring for position -- 
+			float PlayerDistanceToPath = FMath::PointDistToSegment(
+				PlayerCharacter -> GetActorLocation(),
+				Enemy -> GetActorLocation(),
+				DestinationData.Location);
+			float PlayerTimeToPathFalloffFactor = 1.f - FMath::Pow(0.5f, PlayerDistanceToPath / Enemy -> PlayerToPathDistanceFalloff);
+			
+			if (PlayerTimeToPathFalloffFactor <= 0.3f)
+			{
+				TObjectPtr<UNavigationPath> Path = NavSys -> FindPathToLocationSynchronously(World, Enemy -> GetActorLocation(), DestinationData.Location);
+				float MinDistance = TNumericLimits<float>::Max();;
+				if (not Path)
+				{
+					continue;
+				}
+				if (Path -> IsPartial())
+				{
+					continue;
+				}
+				for (int PathPointIndex = 0; PathPointIndex+1 < Path -> PathPoints.Num(); PathPointIndex++)
+				{
+					MinDistance = FMath::Min(MinDistance, FMath::PointDistToSegment(
+														PlayerCharacter -> GetActorLocation(), 
+														Path -> PathPoints[PathPointIndex],
+														Path -> PathPoints[PathPointIndex+1]));
+				}
+				PlayerTimeToPathFalloffFactor = 1.f - FMath::Pow(0.5f, MinDistance / Enemy -> PlayerToPathDistanceFalloff);
+				PositionScore *= PlayerTimeToPathFalloffFactor;
+				
+			}
 			else
 			{
-				float PositionScore = 0;
-				
-				
-				// -- Height scoring for position -- 
-				
-				// Gets the height difference between the possible location and the player's feet
-				float HeightGap =
-						  DestinationData.Location.Z
-						- PlayerCharacter -> GetActorLocation().Z - PlayerCharacter -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
-				
-				// Finds out how many EEnemyElevationPositioning the Enemy should be compared to the player
-				int32 IdealElevation = (int32)Enemy -> CurrentPositioning - (int32)EEnemyElevationPositioning::EEEP_SameLevel;
-				
-				// Finds the height difference between the possible point, and the ideal point
-				float IdealHeight = FMath::Abs(HeightGap - IdealElevation * EncounterManager -> PositioningHeightThreshold);
-				
-				// Gets the distance between the position and the plateau
-				float DistanceFromIdealHeight = FMath::Max(0.f, IdealHeight - EncounterManager -> PositioningHeightPlateau);
-				
-				// Applies falloff depending on how far the position is from the ideal
-				float HeightScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromIdealHeight / EncounterManager -> PositioningHeightThreshold);
-				
-				// The position gets its scored multiplied by 40 (out of 100). 
-				// 40 is the weight for height. 
-				// Higher means a position with more correct height matters more
-				PositionScore += 40 * HeightScoreFalloffFactor;
-				
-				// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Cyan, false, 2.0f, 0, 0.5f);
-				
-				
-				
-				
-				// -- Distance scoring for position -- 
-				FVector2D Position2D = FVector2D(DestinationData.Location.X, DestinationData.Location.Y);
-				FVector2D PlayerPosition2D = FVector2D(PlayerCharacter -> GetActorLocation().X, PlayerCharacter -> GetActorLocation().Y);
-				
-				float PositionFromPlayer = (Position2D - PlayerPosition2D).Length();
-				float DistanceFromIdealDistance = FMath::Abs(Enemy -> IdealDistance - PositionFromPlayer);
-				float DistanceFromPlateau = FMath::Max(0.f, DistanceFromIdealDistance - Enemy -> DistancePlateau);
-				float DistanceScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromPlateau / Enemy -> DistanceFalloff);
-				
-				PositionScore += 40 * DistanceScoreFalloffFactor;
-				
-				
-				
-				
-				// -- Travel distance scoring for position -- 
-				float TravelDistance = FVector::Dist2D(DestinationData.Location, Enemy -> GetActorLocation());
-				float TravelDistanceScoreFalloffFactor = FMath::Pow(0.5f, TravelDistance / Enemy -> TravelDistanceFalloff);
-				
-				PositionScore += 20 * TravelDistanceScoreFalloffFactor;
-				
-				
-				
-				
-				if (PositionScore >= BestScore)
-				{
-					BestScore = PositionScore;
-					BestPosition = DestinationData.Location;
-				}
-				bFailedHit = false;
-				continue;
+				PositionScore *= PlayerTimeToPathFalloffFactor;
 			}
+			
+			
+			
+			
+			
+			if (PositionScore >= BestScore)
+			{
+				BestScore = PositionScore;
+				BestPosition = DestinationData.Location;
+			}
+			bFailedHit = false;
+			continue;
 		}
 		bFailedHit = true;
 	}

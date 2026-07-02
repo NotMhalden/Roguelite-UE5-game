@@ -10,6 +10,8 @@ class AEnemyCharacter;
 class APlayerCharacter;
 
 
+DECLARE_MULTICAST_DELEGATE(FPlayerPositionDriftedDelegate)
+inline FPlayerPositionDriftedDelegate PlayerPositionDriftedDelegate; 
 
 
 UCLASS()
@@ -25,6 +27,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	float CalculatePlayerPositionDrift();
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -34,7 +38,9 @@ public:
 	void OnEnemyDeath();
 	
 	TObjectPtr<APlayerCharacter> GetPlayerCharacter();
-
+	float GetPlayerPositionDrift();
+	float GetPlayerPositionDriftThreshold();
+	
 	
 public:
 	
@@ -67,6 +73,11 @@ public:
 	float PositioningHeightPlateau = PositioningHeightThreshold/2;
 	
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<APlayerCharacter> PlayerCharacter = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	float PlayerPositionDriftThreshold = 600.f;
+	UPROPERTY(VisibleAnywhere)
+	float PlayerPositionDrift = 0.f;
+	FVector PlayerPositionBeforeDrift;
 };

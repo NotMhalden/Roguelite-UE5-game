@@ -6,6 +6,7 @@
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
+#include "Roguelite/Enemy/EnemyController.h"
 #include "Roguelite/Enemy/EnemyDelegates.h"
 #include "Roguelite/PC/PlayerCharacter.h"
 
@@ -34,12 +35,34 @@ void AEncounterManager::BeginPlay()
 	}
 	
 	SpawnEnemies(AmountOfEnemiesToSpawn);
+	CalculatePlayerPositionDrift();
 }
+
+float AEncounterManager::CalculatePlayerPositionDrift()
+{
+	if (PlayerCharacter)
+	{
+		FVector PlayerPosition = PlayerCharacter -> GetActorLocation();
+		PlayerPositionDrift = (PlayerPosition - PlayerPositionBeforeDrift).Length();
+		
+		if (PlayerPositionDrift >= PlayerPositionDriftThreshold)
+		{
+			PlayerPositionBeforeDrift = PlayerPosition;
+			
+			if (PlayerPositionDriftedDelegate.IsBound())
+				PlayerPositionDriftedDelegate.Broadcast();
+		}
+	}
+	return PlayerPositionDrift;
+}
+
 
 // Called every frame
 void AEncounterManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	CalculatePlayerPositionDrift();
 }
 
 
@@ -108,6 +131,11 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		}
 		
 		
+		TObjectPtr<AEnemyController> EnemyController = Cast<AEnemyController>(SpawnedEnemy -> GetController());
+		if (EnemyController)
+		{
+			EnemyController -> OnPlayerPositionDriftDelegateHandle = PlayerPositionDriftedDelegate.AddUObject(EnemyController, &AEnemyController::OnPlayerPositionDrift);
+		}
 		SpawnedEnemy -> EncounterManager = this;
 		AmountOfEnemies++;
 	}
@@ -128,4 +156,15 @@ TObjectPtr<APlayerCharacter> AEncounterManager::GetPlayerCharacter()
 {
 	return PlayerCharacter;
 }
+
+float AEncounterManager::GetPlayerPositionDrift()
+{
+	return PlayerPositionDrift;
+}
+
+float AEncounterManager::GetPlayerPositionDriftThreshold()
+{
+	return PlayerPositionDriftThreshold;
+}
+
 

@@ -23,11 +23,15 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
+	UFUNCTION()
+	void OnPlayerPositionDrift();
+	FDelegateHandle OnPlayerPositionDriftDelegateHandle;
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
-	
+	virtual void OnUnPossess() override;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStateTreeAIComponent> StateTreeAIComponent = nullptr;

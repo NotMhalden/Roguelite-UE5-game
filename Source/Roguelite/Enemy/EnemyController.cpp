@@ -3,6 +3,9 @@
 
 #include "EnemyController.h"
 
+#include "Roguelite/HexGameplayTags.h"
+#include "Roguelite/Room/EncounterManager.h"
+
 
 // Sets default values
 AEnemyController::AEnemyController()
@@ -29,6 +32,11 @@ void AEnemyController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AEnemyController::OnPlayerPositionDrift()
+{
+	StateTreeAIComponent -> SendStateTreeEvent(TAG_Encounter_PlayerReposition.GetTag());	
+}
+
 void AEnemyController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -39,5 +47,12 @@ void AEnemyController::OnPossess(APawn* InPawn)
 	}
 	StateTreeAIComponent -> StartLogic();
 	
+}
+
+void AEnemyController::OnUnPossess()
+{
+	Super::OnUnPossess();
+	
+	PlayerPositionDriftedDelegate.Remove(OnPlayerPositionDriftDelegateHandle);
 }
 
