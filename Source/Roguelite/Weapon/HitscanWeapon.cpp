@@ -65,6 +65,9 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	const FVector Direction = CameraForwardVector;
 	const FVector TraceEnd = TraceStart + Direction * 5000.f;
 	
+	const FVector FakeBulletTraceStart = Mesh -> GetComponentLocation();
+	const FVector FakeBulletTraceEnd = FakeBulletTraceStart + Direction * 70.f;
+	
 	// Prepare collision params
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
@@ -75,6 +78,9 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	FHitResult Hit;
 	const bool bDidHit = World -> LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, TraceChannel, QueryParams);
 	// UE_LOG(LogTemp, Warning, TEXT("Hitscan shot"))
+	
+	DrawDebugLine(World, FakeBulletTraceStart, FakeBulletTraceEnd, FColor::Orange, false, 0.01f, 0, 1.5f);
+	
 	
 	// No hit
 	if (not bDidHit)
