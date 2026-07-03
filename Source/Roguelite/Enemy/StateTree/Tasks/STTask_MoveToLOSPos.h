@@ -39,7 +39,7 @@ public:
 	float MinimumRange = 600.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int32 AttemptsToCheck = 30;
+	int32 AttemptsToCheck = 25;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Camera;
 };

@@ -54,7 +54,7 @@ protected:
 	
 	FTimerHandle DashDelayTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
-	float DashDelay = 0.5f;
+	float DashDelay = 0.8f;
 	void DashDelayOver();
 	
 	

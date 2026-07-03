@@ -4,6 +4,7 @@
 #include "NavLinkProxyForJumping.h"
 
 #include "Components/CapsuleComponent.h"
+#include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
@@ -32,6 +33,14 @@ void ANavLinkProxyForJumping::Tick(float DeltaTime)
 
 void ANavLinkProxyForJumping::OnActorReachedLinkPointHandler(AActor* MovingActor, const FVector& Destination)
 {
+	UWorld* World = GetWorld();
+	if (not World)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cant get world"))
+		return;
+
+	}
+	
 	if (TObjectPtr<AEnemyCharacter> EnemyCharacter = Cast<AEnemyCharacter>(MovingActor))
 	{
 		FVector LaunchVelocity;
@@ -40,9 +49,9 @@ void ANavLinkProxyForJumping::OnActorReachedLinkPointHandler(AActor* MovingActor
 		FVector DestinationPoint = Destination + FVector(0.f,0.f,EnemyHalfHeight + 40.f);
 		
 		float RandomArc = 0.5f;
-		if (DestinationPoint.Z <= EnemyCharacter -> GetActorLocation().Z) // Jump down
+		if (DestinationPoint.Z < EnemyCharacter -> GetActorLocation().Z) // Jump down
 		{
-			RandomArc = FMath::FRandRange(0.35f, 0.55f);
+			RandomArc = FMath::FRandRange(0.5f, 0.6f);
 		}
 		else // Jump up
 		{
@@ -55,7 +64,7 @@ void ANavLinkProxyForJumping::OnActorReachedLinkPointHandler(AActor* MovingActor
 					LaunchVelocity, 
 					EnemyCharacter -> GetActorLocation(), 
 					DestinationPoint,
-					0.f,
+					World -> GetGravityZ() * EnemyCharacter -> GetCharacterMovement() -> GravityScale,
 					RandomArc))
 		{
 			EnemyCharacter -> LaunchCharacter(LaunchVelocity, true, true);

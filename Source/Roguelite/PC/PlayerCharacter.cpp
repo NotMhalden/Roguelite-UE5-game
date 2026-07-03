@@ -4,6 +4,8 @@
 #include "PlayerCharacter.h"
 
 #include "TimerManager.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelite/Weapon/HitscanWeapon.h"
@@ -19,6 +21,9 @@ APlayerCharacter::APlayerCharacter()
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera -> SetupAttachment(GetRootComponent());
+	
+	GetMesh() -> SetCanEverAffectNavigation(true);
+	GetCapsuleComponent() -> SetCanEverAffectNavigation(true);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)

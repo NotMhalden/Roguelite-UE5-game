@@ -19,6 +19,14 @@ AEnemyController::AEnemyController(const FObjectInitializer& ObjectInitializer)
 	bStartAILogicOnPossess = false;
 	StateTreeAIComponent -> SetStartLogicAutomatically(false);
 	
+	UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent());
+	if (CrowdFollowingComponent)
+	{
+		CrowdFollowingComponent -> SetCrowdSeparation(true);
+		CrowdFollowingComponent -> SetCrowdSeparationWeight(0.5f);
+		CrowdFollowingComponent -> SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Good);
+	}
+	
 }
 
 // Called when the game starts or when spawned

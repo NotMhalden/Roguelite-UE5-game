@@ -11,7 +11,6 @@ AWalkingEnemy::AWalkingEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	GetCharacterMovement() -> MaxWalkSpeed = MaxSpeed;
-	GetCharacterMovement() -> bUseRVOAvoidance = true;
 	
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }

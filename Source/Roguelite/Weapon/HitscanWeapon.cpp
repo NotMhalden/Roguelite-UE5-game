@@ -63,7 +63,7 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	// Trace origin / direction
 	const FVector TraceStart = CameraLocation;
 	const FVector Direction = CameraForwardVector;
-	const FVector TraceEnd = TraceStart + Direction * 5000.f;
+	const FVector TraceEnd = TraceStart + Direction * 6000.f;
 	
 	const FVector FakeBulletTraceStart = Mesh -> GetComponentLocation();
 	const FVector FakeBulletTraceEnd = FakeBulletTraceStart + Direction * 70.f;
@@ -85,7 +85,7 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	// No hit
 	if (not bDidHit)
 	{
-		DrawDebugLine(World, TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 0.5f);
+		// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Red, false, 1.0f, 0, 0.5f);
 		return;
 	}
 	

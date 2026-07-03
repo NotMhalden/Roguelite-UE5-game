@@ -155,9 +155,9 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			float HeightScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromIdealHeight / EncounterManager -> PositioningHeightThreshold);
 			
 			// The position gets its scored multiplied by 40 (out of 100). 
-			// 40 is the weight for height. 
+			// 30 is the weight for height. 
 			// Higher means a position with more correct height matters more
-			PositionScore += 40 * HeightScoreFalloffFactor;
+			PositionScore += 30 * HeightScoreFalloffFactor;
 			
 			// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Cyan, false, 2.0f, 0, 0.5f);
 			
@@ -173,7 +173,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			float DistanceFromPlateau = FMath::Max(0.f, DistanceFromIdealDistance - Enemy -> DistancePlateau);
 			float DistanceScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromPlateau / Enemy -> DistanceFalloff);
 			
-			PositionScore += 40 * DistanceScoreFalloffFactor;
+			PositionScore += 50 * DistanceScoreFalloffFactor;
 			
 			
 			
@@ -211,7 +211,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 														Path -> PathPoints[PathPointIndex],
 														Path -> PathPoints[PathPointIndex+1]));
 				}
-				PlayerTimeToPathFalloffFactor = 1.f - FMath::Pow(0.5f, MinDistance / Enemy -> PlayerToPathDistanceFalloff);
+				PlayerTimeToPathFalloffFactor = 1.f - FMath::Pow(0.4f, MinDistance / Enemy -> PlayerToPathDistanceFalloff);
 				PositionScore *= PlayerTimeToPathFalloffFactor;
 				
 			}
@@ -246,7 +246,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 	}
 	
 	
-	DrawDebugLine(World, BestPosition, TraceEnd, FColor::Purple, false, 2.0f, 0, 0.5f);
+	// DrawDebugLine(World, BestPosition, TraceEnd, FColor::Purple, false, 0.5f, 0, 0.5f);
 	AIController -> MoveToLocation(BestPosition);
 	
 	return (RunStatus = EStateTreeRunStatus::Running);

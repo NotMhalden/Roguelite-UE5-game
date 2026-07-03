@@ -42,6 +42,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Landed(const FHitResult& Hit) override;
 
+	UFUNCTION()
+	void MovementSafetyNet();
 	
 	void TakeDamage(int DamageTaken);
 	void Death();
@@ -66,10 +68,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
 		ClampMin = "0", UIMin = "0"))
-	float IdealDistance = 1400.f;
+	float IdealDistance = 2000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
-	float DistancePlateau = IdealDistance/8;
+	float DistancePlateau = IdealDistance/10;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float DistanceFalloff = IdealDistance/4;
@@ -81,8 +83,12 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
-	float PlayerToPathDistanceFalloff = 400.f;
+	float PlayerToPathDistanceFalloff = 300.f;
 	
 	
 	TWeakObjectPtr<ANavLinkProxy> ActiveJumpLink = nullptr;
+	
+	
+protected:
+	FTimerHandle SafetyNetTimerHandle;
 };
