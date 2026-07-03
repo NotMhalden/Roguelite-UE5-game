@@ -108,7 +108,7 @@ void AEnemyCharacter::MovementSafetyNet()
 	
 	if (EnemyController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Stuck"));
+		// UE_LOG(LogTemp, Warning, TEXT("Stuck"));
 		const float DistanceMoved = FVector::Dist2D(GetActorLocation(), LastKnownLocation);
 		if (DistanceMoved < SafetyNetActivationDistanceThreshold)
 		{
@@ -132,23 +132,31 @@ void AEnemyCharacter::MovementSafetyNet()
 		
 		
 		
-		UE_LOG(LogTemp, Warning, TEXT("Starting to nudge"));
+		// UE_LOG(LogTemp, Warning, TEXT("Starting to nudge"));
 		FNavLocation ClosestNavMeshLocation;
 		bool bFoundPoint = NavSys -> ProjectPointToNavigation(GetActorLocation(), ClosestNavMeshLocation, FVector(500.f, 500.f, 500.f));
 		
+		/*
 		UE_LOG(LogTemp, Warning, TEXT("Closest NavMesh Location:  X: %f		Y: %f		Z: %f"),
 			ClosestNavMeshLocation.Location.X, ClosestNavMeshLocation.Location.Y, ClosestNavMeshLocation.Location.Z);
+		*/
 		
 		if (not bFoundPoint)
 			return;
 		
 		FVector DistanceToNavMesh = ClosestNavMeshLocation.Location - LastKnownLocation;
 		DistanceToNavMesh.Z = 0.f;
-		if (DistanceToNavMesh.SizeSquared() > 0.001f)
+		// UE_LOG(LogTemp, Warning, TEXT("Distance To Navmesh SizeSquared: %f"), DistanceToNavMesh.SizeSquared())
+		
+		if ( DistanceToNavMesh.SizeSquared() >= FMath::Square(GetCapsuleComponent() -> GetScaledCapsuleRadius()) )
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Nudged"));
-			const FVector NudgingStep = DistanceToNavMesh.GetSafeNormal() * SafetyNetNudgingDistance;
-			SetActorLocation(GetActorLocation() + NudgingStep, true);
+			FVector EnemyNudgeLocation = FVector(
+				ClosestNavMeshLocation.Location.X, 
+				ClosestNavMeshLocation.Location.Y, 
+				ClosestNavMeshLocation.Location.Z + GetCapsuleComponent() -> GetScaledCapsuleHalfHeight());
+			
+			// UE_LOG(LogTemp, Warning, TEXT("Nudged"));
+			SetActorLocation(EnemyNudgeLocation);
 		}
 	}
 }
