@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BehaviorTree/Tasks/BTTask_RunDynamicStateTree.h"
 #include "GameFramework/Character.h"
 #include "Navigation/NavLinkProxy.h"
+#include "Navigation/PathFollowingComponent.h"
 #include "EnemyCharacter.generated.h"
 
 class AEncounterManager;
@@ -59,36 +61,43 @@ public:
 	
 	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true", 
 		ClampMin = "0", ClampMax = "100", UIMin = "0", UIMax = "100"))
 	TMap<EEnemyElevationPositioning, int32> EnemyPositioningNurtureChance;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true"))
 	EEnemyElevationPositioning CurrentPositioning = EEnemyElevationPositioning::EEEP_SameLevel;
 	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 		ClampMin = "0", UIMin = "0"))
-	float IdealDistance = 2000.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	float IdealDistance = 1700.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
-	float DistancePlateau = IdealDistance/10;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	float DistancePlateau = IdealDistance/8;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float DistanceFalloff = IdealDistance/4;
 	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float TravelDistanceFalloff = 250.f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float PlayerToPathDistanceFalloff = 300.f;
 	
 	
 	TWeakObjectPtr<ANavLinkProxy> ActiveJumpLink = nullptr;
 	
-	
+
 protected:
 	FTimerHandle SafetyNetTimerHandle;
+	FVector LastKnownLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|SafetyNet", meta = (AllowPrivateAccess = "true"))
+	float SafetyNetActivationDistanceThreshold = 30.f;
+	UPROPERTY()
+	float TimeEnemyStuck = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|SafetyNet", meta = (AllowPrivateAccess = "true"))
+	float SafetyNetNudgingDistance = 20.f;
 };

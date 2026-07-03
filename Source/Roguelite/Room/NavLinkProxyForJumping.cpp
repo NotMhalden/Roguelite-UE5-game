@@ -51,11 +51,11 @@ void ANavLinkProxyForJumping::OnActorReachedLinkPointHandler(AActor* MovingActor
 		float RandomArc = 0.5f;
 		if (DestinationPoint.Z < EnemyCharacter -> GetActorLocation().Z) // Jump down
 		{
-			RandomArc = FMath::FRandRange(0.5f, 0.6f);
+			RandomArc = FMath::FRandRange(0.6f, 0.8f);
 		}
 		else // Jump up
 		{
-			RandomArc = FMath::FRandRange(0.25f, 0.35f);
+			RandomArc = FMath::FRandRange(0.3f, 0.4f);
 		}
 		
 		

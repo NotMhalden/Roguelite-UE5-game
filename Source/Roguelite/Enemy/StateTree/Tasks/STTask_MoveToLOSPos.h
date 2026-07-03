@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
+#include "Roguelite/Enemy/EnemyController.h"
 #include "STTask_MoveToLOSPos.generated.h"
 
 /**
@@ -27,19 +28,19 @@ protected:
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 	
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AEnemyCharacter> Enemy = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<AAIController> AIController = nullptr;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AEnemyController> EnemyController = nullptr;
 	
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	float MaxCheckDistance = 2500.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	float MinimumRange = 600.f;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	int32 AttemptsToCheck = 25;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Camera;
 };

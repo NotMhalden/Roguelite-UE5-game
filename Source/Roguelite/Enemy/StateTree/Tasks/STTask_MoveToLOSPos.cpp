@@ -31,7 +31,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 	}
 	
 	// Checks if there is an AI Controller
-	if (not AIController)
+	if (not EnemyController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("AIController ptr error"));
 		return RunStatus = EStateTreeRunStatus::Failed;
@@ -157,10 +157,9 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			// The position gets its scored multiplied by 40 (out of 100). 
 			// 30 is the weight for height. 
 			// Higher means a position with more correct height matters more
-			PositionScore += 30 * HeightScoreFalloffFactor;
+			PositionScore += 40 * HeightScoreFalloffFactor;
 			
 			// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Cyan, false, 2.0f, 0, 0.5f);
-			
 			
 			
 			
@@ -173,7 +172,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			float DistanceFromPlateau = FMath::Max(0.f, DistanceFromIdealDistance - Enemy -> DistancePlateau);
 			float DistanceScoreFalloffFactor = FMath::Pow(0.5f, DistanceFromPlateau / Enemy -> DistanceFalloff);
 			
-			PositionScore += 50 * DistanceScoreFalloffFactor;
+			PositionScore += 40 * DistanceScoreFalloffFactor;
 			
 			
 			
@@ -247,7 +246,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 	
 	
 	// DrawDebugLine(World, BestPosition, TraceEnd, FColor::Purple, false, 0.5f, 0, 0.5f);
-	AIController -> MoveToLocation(BestPosition);
+	EnemyController -> MoveToLocation(BestPosition);
 	
 	return (RunStatus = EStateTreeRunStatus::Running);
 }
@@ -256,11 +255,11 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 
 EStateTreeRunStatus USTTask_MoveToLOSPos::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {
-	if (not AIController)
+	if (not EnemyController)
 	{
 		return RunStatus = EStateTreeRunStatus::Failed;
 	}
-	if (AIController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
+	if (EnemyController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
 	{
 		return (RunStatus = EStateTreeRunStatus::Succeeded);
 	}
