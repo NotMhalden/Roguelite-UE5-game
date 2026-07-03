@@ -6,6 +6,7 @@
 #include "EnemyDelegates.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -18,6 +19,9 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCapsuleComponent() -> SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	
 	GetMesh() -> SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	GetCharacterMovement() -> MaxStepHeight = 45.0f;
+	GetCharacterMovement() -> bUseRVOAvoidance = true;
+	GetCharacterMovement() -> DefaultLandMovementMode = MOVE_NavWalking;
 	
 	TArray<EEnemyElevationPositioning> EnemyPositionKeys;
 	EnemyPositioningNurtureChance.GetKeys(EnemyPositionKeys);
@@ -44,7 +48,6 @@ AEnemyCharacter::AEnemyCharacter()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 
@@ -54,7 +57,16 @@ void AEnemyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-
+void AEnemyCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+	
+	if (ActiveJumpLink.IsValid())
+	{
+		ActiveJumpLink -> ResumePathFollowing(this);
+		ActiveJumpLink.Reset();
+	}
+}
 
 
 void AEnemyCharacter::TakeDamage(int DamageTaken)

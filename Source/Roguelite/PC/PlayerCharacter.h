@@ -50,7 +50,7 @@ public:
 protected:
 	bool bIsDashing = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
-	float DashPower = 10.f;
+	float DashPower = 7.f;
 	
 	FTimerHandle DashDelayTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))

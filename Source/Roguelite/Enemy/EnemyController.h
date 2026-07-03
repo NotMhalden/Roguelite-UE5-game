@@ -14,7 +14,7 @@ class ROGUELITE_API AEnemyController : public AAIController
 
 public:
 	// Sets default values for this actor's properties
-	AEnemyController();
+	AEnemyController(const FObjectInitializer& ObjectInitialize);
 
 protected:
 	// Called when the game starts or when spawned

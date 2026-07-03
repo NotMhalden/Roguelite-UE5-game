@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Navigation/NavLinkProxy.h"
 #include "EnemyCharacter.generated.h"
 
 class AEncounterManager;
@@ -39,13 +40,12 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+	virtual void Landed(const FHitResult& Hit) override;
+
 	
 	void TakeDamage(int DamageTaken);
 	void Death();
-	
-	
-public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxHealth = 75;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
@@ -82,4 +82,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float PlayerToPathDistanceFalloff = 400.f;
+	
+	
+	TWeakObjectPtr<ANavLinkProxy> ActiveJumpLink = nullptr;
 };
