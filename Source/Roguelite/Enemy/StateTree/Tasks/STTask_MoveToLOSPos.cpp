@@ -205,6 +205,14 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 				}
 				for (int PathPointIndex = 0; PathPointIndex+1 < Path -> PathPoints.Num(); PathPointIndex++)
 				{
+					/*
+					DrawDebugLine(World, 
+						Path -> PathPoints[PathPointIndex], 
+						Path -> PathPoints[PathPointIndex+1], 
+						FColor::Red, false, 2.0f, 0, 0.5f);
+					*/
+					
+					
 					MinDistance = FMath::Min(MinDistance, FMath::PointDistToSegment(
 														PlayerCharacter -> GetActorLocation(), 
 														Path -> PathPoints[PathPointIndex],
@@ -216,6 +224,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			}
 			else
 			{
+				// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Emerald, false, 2.0f, 0, 0.5f);
 				PositionScore *= PlayerTimeToPathFalloffFactor;
 			}
 			

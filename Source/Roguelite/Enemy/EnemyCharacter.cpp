@@ -23,6 +23,8 @@ AEnemyCharacter::AEnemyCharacter()
 	
 	GetCapsuleComponent() -> InitCapsuleSize(45.0f, 90.0f);
 	GetCapsuleComponent() -> SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	GetCapsuleComponent() -> SetCollisionObjectType(ECC_GameTraceChannel1);
+	GetCapsuleComponent() -> SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
 	
 	GetMesh() -> SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	GetCharacterMovement() -> MaxStepHeight = 45.0f;
@@ -104,7 +106,10 @@ void AEnemyCharacter::MovementSafetyNet()
 		return;
 	}
 	
-
+	/*
+	UE_LOG(LogTemp, Warning, TEXT("status=%d  jumpLinkValid=%d  stuck=%.1f"),
+		(int)EnemyController->GetMoveStatus(), ActiveJumpLink.IsValid(), TimeEnemyStuck);
+	*/
 	
 	if (EnemyController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
 	{
@@ -136,19 +141,18 @@ void AEnemyCharacter::MovementSafetyNet()
 		FNavLocation ClosestNavMeshLocation;
 		bool bFoundPoint = NavSys -> ProjectPointToNavigation(GetActorLocation(), ClosestNavMeshLocation, FVector(500.f, 500.f, 500.f));
 		
-		/*
 		UE_LOG(LogTemp, Warning, TEXT("Closest NavMesh Location:  X: %f		Y: %f		Z: %f"),
 			ClosestNavMeshLocation.Location.X, ClosestNavMeshLocation.Location.Y, ClosestNavMeshLocation.Location.Z);
-		*/
 		
 		if (not bFoundPoint)
 			return;
 		
 		FVector DistanceToNavMesh = ClosestNavMeshLocation.Location - LastKnownLocation;
 		DistanceToNavMesh.Z = 0.f;
-		// UE_LOG(LogTemp, Warning, TEXT("Distance To Navmesh SizeSquared: %f"), DistanceToNavMesh.SizeSquared())
+		UE_LOG( LogTemp, Warning, TEXT("Distance To Navmesh SizeSquared: %f"), DistanceToNavMesh.SizeSquared() )
+		UE_LOG( LogTemp, Warning, TEXT("Squared capsule radius: %f"), FMath::Square(GetCapsuleComponent() -> GetScaledCapsuleRadius()) )
 		
-		if ( DistanceToNavMesh.SizeSquared() >= FMath::Square(GetCapsuleComponent() -> GetScaledCapsuleRadius()) )
+		if ( DistanceToNavMesh.SizeSquared() >= 5.f )
 		{
 			FVector EnemyNudgeLocation = FVector(
 				ClosestNavMeshLocation.Location.X, 
