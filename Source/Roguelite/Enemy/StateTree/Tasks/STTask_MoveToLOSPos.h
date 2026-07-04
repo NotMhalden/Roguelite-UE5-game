@@ -27,20 +27,21 @@ protected:
 	
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 	
-public:
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AEnemyCharacter> Enemy = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AEnemyController> EnemyController = nullptr;
 	
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
 	float MaxCheckDistance = 2500.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
-	float MinimumRange = 600.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
+	float MinimumRangeToPlayer = 600.f;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
 	int32 AttemptsToCheck = 25;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Camera;
 };

@@ -86,6 +86,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float PlayerToPathDistanceFalloff = 300.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
+	ClampMin = "0", UIMin = "0"))
+	float MinimumPlayerDistanceToPath = 100.f;
 	
 	
 	TWeakObjectPtr<ANavLinkProxy> ActiveJumpLink = nullptr;

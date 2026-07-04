@@ -125,7 +125,7 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 		AActor* HitActor = Hit.GetActor();
 		if (Cast<APlayerCharacter>(HitActor))
 		{
-			if (FVector::Distance(TraceEnd, TraceStart) < MinimumRange)
+			if (FVector::Distance(TraceEnd, TraceStart) < MinimumRangeToPlayer)
 			{
 				// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Green, false, 2.0f, 0, 0.5f);
 				bFailedHit = true;
@@ -184,14 +184,12 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			PositionScore += 20 * TravelDistanceScoreFalloffFactor;
 			
 			
-			// -- Player distance to position scoring for position -- 
-			float PlayerDistanceToPath = FMath::PointDistToSegment(
-				PlayerCharacter -> GetActorLocation(),
-				Enemy -> GetActorLocation(),
-				DestinationData.Location);
-			float PlayerTimeToPathFalloffFactor = 1.f - FMath::Pow(0.5f, PlayerDistanceToPath / Enemy -> PlayerToPathDistanceFalloff);
 			
-			if (PlayerTimeToPathFalloffFactor <= 0.3f)
+			
+			// -- Making sure Player is on the path to new position -- 
+			FVector HitLocation;
+			const bool bPathBlocked = NavSys -> NavigationRaycast(Enemy, Enemy -> GetActorLocation(), DestinationData.Location,HitLocation);
+			if (bPathBlocked)
 			{
 				TObjectPtr<UNavigationPath> Path = NavSys -> FindPathToLocationSynchronously(World, Enemy -> GetActorLocation(), DestinationData.Location);
 				float MinDistance = TNumericLimits<float>::Max();;
@@ -203,14 +201,13 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 				{
 					continue;
 				}
+				
 				for (int PathPointIndex = 0; PathPointIndex+1 < Path -> PathPoints.Num(); PathPointIndex++)
 				{
-					/*
 					DrawDebugLine(World, 
 						Path -> PathPoints[PathPointIndex], 
 						Path -> PathPoints[PathPointIndex+1], 
 						FColor::Red, false, 2.0f, 0, 0.5f);
-					*/
 					
 					
 					MinDistance = FMath::Min(MinDistance, FMath::PointDistToSegment(
@@ -218,20 +215,27 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 														Path -> PathPoints[PathPointIndex],
 														Path -> PathPoints[PathPointIndex+1]));
 				}
-				PlayerTimeToPathFalloffFactor = 1.f - FMath::Pow(0.4f, MinDistance / Enemy -> PlayerToPathDistanceFalloff);
-				PositionScore *= PlayerTimeToPathFalloffFactor;
-				
+				if (MinDistance < Enemy -> MinimumPlayerDistanceToPath)
+				{
+					continue;
+				}
 			}
 			else
 			{
-				// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Emerald, false, 2.0f, 0, 0.5f);
-				PositionScore *= PlayerTimeToPathFalloffFactor;
+				float PlayerDistanceToPath = FMath::PointDistToSegment(
+				PlayerCharacter -> GetActorLocation(),
+				Enemy -> GetActorLocation(),
+				DestinationData.Location);
+				if (PlayerDistanceToPath < Enemy -> MinimumPlayerDistanceToPath)
+				{
+					continue;
+				}
 			}
+
 			
 			
 			
-			
-			
+			// Getting best position
 			if (PositionScore >= BestScore)
 			{
 				BestScore = PositionScore;
