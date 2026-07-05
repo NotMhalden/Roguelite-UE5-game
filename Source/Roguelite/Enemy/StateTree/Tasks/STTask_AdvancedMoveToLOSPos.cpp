@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "STTask_MoveToLOSPos.h"
+#include "STTask_AdvancedMoveToLOSPos.h"
 
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
@@ -11,14 +11,14 @@
 #include "Roguelite/Room/EncounterManager.h"
 
 
-USTTask_MoveToLOSPos::USTTask_MoveToLOSPos(const FObjectInitializer& ObjectInitializer)
+USTTask_AdvancedMoveToLOSPos::USTTask_AdvancedMoveToLOSPos(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
 {
 	bShouldStateChangeOnReselect = true;
 	bShouldCallTick = true;
 }
 
-EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext& Context,
+EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecutionContext& Context,
 	const FStateTreeTransitionResult& Transition)
 {
 	RunStatus = EStateTreeRunStatus::Running;
@@ -83,8 +83,10 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			);
 	
 	
-	float BestScore = 0.f;
-	FVector BestPosition = FVector(0.f,0.f,0.f);
+
+	
+	TArray<TPair<float, FVector>> PositionCandidates;
+	
 	
 	// Looks AttemptsToCheck times to see if there's a valid place the enemy can be, and see the player
 	bool bFailedHit = false;
@@ -183,64 +185,15 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 			
 			PositionScore += 20 * TravelDistanceScoreFalloffFactor;
 			
-			
-			
-			
-			// -- Making sure Player is on the path to new position -- 
-			FVector HitLocation;
-			const bool bPathBlocked = NavSys -> NavigationRaycast(Enemy, Enemy -> GetActorLocation(), DestinationData.Location,HitLocation);
-			if (bPathBlocked)
-			{
-				TObjectPtr<UNavigationPath> Path = NavSys -> FindPathToLocationSynchronously(World, Enemy -> GetActorLocation(), DestinationData.Location);
-				float MinDistance = TNumericLimits<float>::Max();;
-				if (not Path)
-				{
-					continue;
-				}
-				if (Path -> IsPartial())
-				{
-					continue;
-				}
-				
-				for (int PathPointIndex = 0; PathPointIndex+1 < Path -> PathPoints.Num(); PathPointIndex++)
-				{
-					DrawDebugLine(World, 
-						Path -> PathPoints[PathPointIndex], 
-						Path -> PathPoints[PathPointIndex+1], 
-						FColor::Red, false, 2.0f, 0, 0.5f);
-					
-					
-					MinDistance = FMath::Min(MinDistance, FMath::PointDistToSegment(
-														PlayerCharacter -> GetActorLocation(), 
-														Path -> PathPoints[PathPointIndex],
-														Path -> PathPoints[PathPointIndex+1]));
-				}
-				if (MinDistance < Enemy -> MinimumPlayerDistanceToPath)
-				{
-					continue;
-				}
-			}
-			else
-			{
-				float PlayerDistanceToPath = FMath::PointDistToSegment(
-				PlayerCharacter -> GetActorLocation(),
-				Enemy -> GetActorLocation(),
-				DestinationData.Location);
-				if (PlayerDistanceToPath < Enemy -> MinimumPlayerDistanceToPath)
-				{
-					continue;
-				}
-			}
 
 			
+			if (DestinationData.Location.IsNearlyZero())
+				continue;
+			if (PositionScore <= 0)
+				continue;
 			
+			PositionCandidates.Add({PositionScore, DestinationData.Location});
 			
-			// Getting best position
-			if (PositionScore >= BestScore)
-			{
-				BestScore = PositionScore;
-				BestPosition = DestinationData.Location;
-			}
 			bFailedHit = false;
 			continue;
 		}
@@ -248,25 +201,115 @@ EStateTreeRunStatus USTTask_MoveToLOSPos::EnterState(FStateTreeExecutionContext&
 	}
 	
 	
-	if (not BestScore)
-	{
+	
+	
+	// Calculate if a position makes the enemy walk past the player
+	
+	if (PositionCandidates.IsEmpty())
 		return (RunStatus = EStateTreeRunStatus::Failed);
-	}
-	if (BestPosition.IsZero())
+	
+	
+	
+
+	
+	PositionCandidates.Sort([](
+		const TPair<float, FVector>& CandidateA, 
+		const TPair<float, FVector>& CandidateB)
+		{
+			return CandidateA.Key > CandidateB.Key;
+		});
+	
+	float BestScore = 0.f;
+	FVector BestPos = FVector(0.f,0.f,0.f);
+	const float CurrentEnemyToPlayerDistance = FVector::Dist(Enemy -> GetActorLocation(), PlayerCharacter -> GetActorLocation());
+	const float MinimumRequiredDistance =  FMath::Min(Enemy -> MinimumPlayerDistanceToPath, CurrentEnemyToPlayerDistance);
+	
+	
+	int MaxAttemptsToCheckDistanceToPlayer = 4;
+	int CurrentAttempt = 0;
+	bool bFoundGoodPosition = false;
+	for (TPair<float, FVector> CurrentPosCandidate : PositionCandidates)
 	{
-		return (RunStatus = EStateTreeRunStatus::Failed);
+
+		if (CurrentAttempt >= MaxAttemptsToCheckDistanceToPlayer)
+			break;
+		CurrentAttempt++;
+		
+		BestScore = CurrentPosCandidate.Key;
+		BestPos = CurrentPosCandidate.Value;
+		
+		
+		// -- Making sure Player is on the path to new position -- 
+		FVector HitLocation;
+		const bool bPathBlocked = NavSys -> NavigationRaycast(Enemy, Enemy -> GetActorLocation(), BestPos,HitLocation);
+		if (bPathBlocked)
+		{
+			TObjectPtr<UNavigationPath> Path = NavSys -> FindPathToLocationSynchronously(World, Enemy -> GetActorLocation(), BestPos);
+			float MinDistance = TNumericLimits<float>::Max();;
+			if (not Path)
+			{
+				continue;
+			}
+			if (Path -> IsPartial())
+			{
+				continue;
+			}
+				
+			for (int PathPointIndex = 0; PathPointIndex+1 < Path -> PathPoints.Num(); PathPointIndex++)
+			{
+				DrawDebugLine(World, 
+					Path -> PathPoints[PathPointIndex], 
+					Path -> PathPoints[PathPointIndex+1], 
+					FColor::Red, false, 2.0f, 0, 0.5f);
+					
+					
+				MinDistance = FMath::Min(MinDistance, FMath::PointDistToSegment(
+													PlayerCharacter -> GetActorLocation(), 
+													Path -> PathPoints[PathPointIndex],
+													Path -> PathPoints[PathPointIndex+1]));
+				
+
+			}
+			if (MinDistance >= MinimumRequiredDistance)
+			{
+				bFoundGoodPosition = true;
+				break;
+			}
+		}
+		else
+		{
+			float PlayerDistanceToPath = FMath::PointDistToSegment(
+			PlayerCharacter -> GetActorLocation(),
+			Enemy -> GetActorLocation(),
+			BestPos);
+			if (PlayerDistanceToPath >= MinimumRequiredDistance)
+			{
+				bFoundGoodPosition = true;
+				break;
+			}
+
+		}
 	}
 	
+	
+	PositionCandidates.Empty();
+	
+	
+	
+	if (not bFoundGoodPosition)
+    {
+    	return RunStatus = EStateTreeRunStatus::Failed;
+    }
 	
 	// DrawDebugLine(World, BestPosition, TraceEnd, FColor::Purple, false, 0.5f, 0, 0.5f);
-	EnemyController -> MoveToLocation(BestPosition);
+	EnemyController -> MoveToLocation(BestPos);
 	
 	return (RunStatus = EStateTreeRunStatus::Running);
 }
 
 
 
-EStateTreeRunStatus USTTask_MoveToLOSPos::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
+EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {
 	if (not EnemyController)
 	{

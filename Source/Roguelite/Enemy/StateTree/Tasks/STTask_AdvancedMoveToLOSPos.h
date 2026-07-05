@@ -7,18 +7,18 @@
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
 #include "Roguelite/Enemy/EnemyController.h"
-#include "STTask_MoveToLOSPos.generated.h"
+#include "STTask_AdvancedMoveToLOSPos.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ROGUELITE_API USTTask_MoveToLOSPos : public UStateTreeTaskBlueprintBase
+class ROGUELITE_API USTTask_AdvancedMoveToLOSPos : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
 	
 public:
-	USTTask_MoveToLOSPos(const FObjectInitializer& ObjectInitializer);
+	USTTask_AdvancedMoveToLOSPos(const FObjectInitializer& ObjectInitializer);
 	
 	
 protected:
@@ -34,14 +34,14 @@ protected:
 	TObjectPtr<AEnemyController> EnemyController = nullptr;
 	
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	float MaxCheckDistance = 2500.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	float MinimumRangeToPlayer = 600.f;
 	
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	int32 AttemptsToCheck = 25;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Context", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Camera;
 };
