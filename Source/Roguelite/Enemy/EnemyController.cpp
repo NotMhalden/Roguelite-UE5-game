@@ -3,6 +3,7 @@
 
 #include "EnemyController.h"
 
+#include "Engine/World.h"
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Roguelite/HexGameplayTags.h"
 #include "Roguelite/Room/EncounterManager.h"
@@ -46,6 +47,7 @@ void AEnemyController::Tick(float DeltaTime)
 
 void AEnemyController::OnPlayerPositionDrift()
 {
+
 	StateTreeAIComponent -> SendStateTreeEvent(TAG_Encounter_PlayerReposition.GetTag());	
 }
 

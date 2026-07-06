@@ -35,13 +35,13 @@ protected:
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
-	float MaxCheckDistance = 2500.f;
+	float MaxCheckDistance = 1600.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
-	float MinimumRangeToPlayer = 600.f;
+	float MinimumRangeToPlayer = 500.f;
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
-	int32 AttemptsToCheck = 25;
+	int32 AttemptsToCheck = 20;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Camera;
 };

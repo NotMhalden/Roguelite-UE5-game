@@ -45,8 +45,9 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 
 	}
 	
+	
 	// Gets the NavMesh
-	const UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(World);
+	UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(World);
 	if (not NavSys)
 	{
 		UE_LOG(LogTemp, Error, TEXT("NavSys error"));
@@ -244,36 +245,49 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 		const bool bPathBlocked = NavSys -> NavigationRaycast(Enemy, Enemy -> GetActorLocation(), BestPos,HitLocation);
 		if (bPathBlocked)
 		{
-			TObjectPtr<UNavigationPath> Path = NavSys -> FindPathToLocationSynchronously(World, Enemy -> GetActorLocation(), BestPos);
-			float MinDistance = TNumericLimits<float>::Max();;
-			if (not Path)
+			
+			FAIMoveRequest MoveRequest(BestPos);
+			FPathFindingQuery PathFindingQuery;
+			if (EnemyController -> BuildPathfindingQuery(MoveRequest, PathFindingQuery))
 			{
-				continue;
-			}
-			if (Path -> IsPartial())
-			{
-				continue;
-			}
+				const FPathFindingResult PathFindingResult = NavSys -> FindPathSync(PathFindingQuery);
+				if (PathFindingResult.IsSuccessful() and not PathFindingResult.IsPartial())
+				{
+					float MinDistance = TNumericLimits<float>::Max();
+					if (not PathFindingResult.Path or not PathFindingResult.Path.IsValid())
+						continue;
+					
+					const TArray<FNavPathPoint>& Path= PathFindingResult.Path->GetPathPoints();
+					if (Path.IsEmpty())
+						continue;
+					for (int PathPointIndex = 0; PathPointIndex+1 < Path.Num(); PathPointIndex++)
+					{
 				
-			for (int PathPointIndex = 0; PathPointIndex+1 < Path -> PathPoints.Num(); PathPointIndex++)
-			{
-				DrawDebugLine(World, 
-					Path -> PathPoints[PathPointIndex], 
-					Path -> PathPoints[PathPointIndex+1], 
-					FColor::Red, false, 2.0f, 0, 0.5f);
+						DrawDebugLine(World, 
+							Path[PathPointIndex], 
+							Path[PathPointIndex+1], 
+							FColor::Red, false, 2.0f, 0, 0.5f);
 					
 					
-				MinDistance = FMath::Min(MinDistance, FMath::PointDistToSegment(
-													PlayerCharacter -> GetActorLocation(), 
-													Path -> PathPoints[PathPointIndex],
-													Path -> PathPoints[PathPointIndex+1]));
+						MinDistance = FMath::Min(MinDistance, FMath::PointDistToSegment(
+															PlayerCharacter -> GetActorLocation(), 
+															Path[PathPointIndex],
+															Path[PathPointIndex+1]));
 				
 
-			}
-			if (MinDistance >= MinimumRequiredDistance)
-			{
-				bFoundGoodPosition = true;
-				break;
+					}
+					if (MinDistance >= MinimumRequiredDistance)
+					{
+						UE_LOG( LogTemp, Warning, TEXT("MinDistance (%f) is more or equal to MinimumRequiredDistance (%f)"), MinDistance, MinimumRequiredDistance )
+						
+						FAIRequestID RequestID = EnemyController -> RequestMove(MoveRequest, PathFindingResult.Path);
+						if (RequestID.IsValid())
+						{
+							return (RunStatus = EStateTreeRunStatus::Running);
+						}
+						bFoundGoodPosition = true;
+					}
+				}
 			}
 		}
 		else
@@ -284,6 +298,7 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 			BestPos);
 			if (PlayerDistanceToPath >= MinimumRequiredDistance)
 			{
+				UE_LOG( LogTemp, Warning, TEXT("PlayerDistanceToPath (%f) is more or equal to MinimumRequiredDistance (%f)"), PlayerDistanceToPath, MinimumRequiredDistance )
 				bFoundGoodPosition = true;
 				break;
 			}
@@ -298,6 +313,7 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 	
 	if (not bFoundGoodPosition)
     {
+		UE_LOG(LogTemp, Error, TEXT("Did not find a good pos"))
     	return RunStatus = EStateTreeRunStatus::Failed;
     }
 	
