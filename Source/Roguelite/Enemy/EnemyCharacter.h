@@ -77,6 +77,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float DistanceFalloff = IdealDistance/4;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
+	ClampMin = "0", UIMin = "0"))
+	float MinimumRangeToPlayer = 600.f;
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",

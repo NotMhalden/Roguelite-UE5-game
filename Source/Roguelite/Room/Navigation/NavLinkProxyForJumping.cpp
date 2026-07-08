@@ -55,7 +55,7 @@ void ANavLinkProxyForJumping::OnActorReachedLinkPointHandler(AActor* MovingActor
 		}
 		else // Jump up
 		{
-			RandomArc = FMath::FRandRange(0.3f, 0.4f);
+			RandomArc = FMath::FRandRange(0.25f, 0.35f);
 		}
 		
 		

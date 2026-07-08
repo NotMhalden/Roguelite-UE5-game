@@ -35,9 +35,7 @@ protected:
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
-	float MaxCheckDistance = 1600.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))
-	float MinimumRangeToPlayer = 500.f;
+	float MaxCheckDistance = 2500.f;
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Parameter", meta = (AllowPrivateAccess = "true"))

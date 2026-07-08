@@ -96,14 +96,9 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 		FNavLocation DestinationData; // The data location itself
 		bool bIsPointValid = false;
 		
-		if(bFailedHit)
-		{
-			bIsPointValid = NavSys -> GetRandomReachablePointInRadius(PlayerCharacter -> GetActorLocation(), MaxCheckDistance, DestinationData);
-		}
-		else
-		{
-			bIsPointValid = NavSys -> GetRandomReachablePointInRadius(Enemy -> GetActorLocation(), MaxCheckDistance, DestinationData);
-		}
+
+		bIsPointValid = NavSys -> GetRandomReachablePointInRadius(PlayerCharacter -> GetActorLocation(), MaxCheckDistance, DestinationData);
+
 		
 		// Checks if the point is valid or not
 		if (not bIsPointValid)
@@ -128,7 +123,7 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 		AActor* HitActor = Hit.GetActor();
 		if (Cast<APlayerCharacter>(HitActor))
 		{
-			if (FVector::Distance(TraceEnd, TraceStart) < MinimumRangeToPlayer)
+			if (FVector::Distance(TraceEnd, TraceStart) < Enemy -> MinimumRangeToPlayer)
 			{
 				// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Green, false, 2.0f, 0, 0.5f);
 				bFailedHit = true;
@@ -226,7 +221,7 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 	const float MinimumRequiredDistance =  FMath::Min(Enemy -> MinimumPlayerDistanceToPath, CurrentEnemyToPlayerDistance);
 	
 	
-	int MaxAttemptsToCheckDistanceToPlayer = 4;
+	int MaxAttemptsToCheckDistanceToPlayer = 3;
 	int CurrentAttempt = 0;
 	bool bFoundGoodPosition = false;
 	for (TPair<float, FVector> CurrentPosCandidate : PositionCandidates)
