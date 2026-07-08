@@ -125,6 +125,11 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 				if (PositionChance >= EnemyPositioningNurtureChance)
 				{
 					SpawnedEnemy -> CurrentPositioning = CurrentPositioning;
+					
+					int32 IdealElevation = (int32)SpawnedEnemy -> CurrentPositioning - (int32)EEnemyElevationPositioning::EEEP_SameLevel;
+					float IdealHeight = -IdealElevation * PositioningHeightThreshold;
+					SpawnedEnemy -> IdealHeightDistance = IdealHeight;
+					SpawnedEnemy -> PositioningHeightThreshold = PositioningHeightThreshold;
 					break;
 				}
 			}

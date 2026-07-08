@@ -22,9 +22,9 @@ struct FEQSEvaluatorData
 	TEnumAsByte<EEnvQueryRunMode::Type> EQRunMode  = EEnvQueryRunMode::SingleResult;
 	
 	UPROPERTY(EditAnywhere, Category="Parameter")
-	float InnerRadius = 600.f;
+	float InnerRadius = 500.f;
 	UPROPERTY(EditAnywhere, Category="Parameter")
-	float OuterRadius = 1700.f;
+	float OuterRadius = 2200.f;
 	
 	UPROPERTY(VisibleAnywhere, Category="Output")
 	FVector OutputLocation = FVector(0.f, 0.f, 0.f);

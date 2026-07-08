@@ -71,11 +71,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 		ClampMin = "0", UIMin = "0"))
 	float IdealDistance = 1700.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true"))
+	float IdealHeightDistance = -150.f;	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true"))
+	float PositioningHeightThreshold = IdealHeightDistance;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))
 	float DistancePlateau = IdealDistance/8;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
-	ClampMin = "0", UIMin = "0"))
+	ClampMin = "0", UIMin = "0"))	
 	float DistanceFalloff = IdealDistance/4;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true",
 	ClampMin = "0", UIMin = "0"))

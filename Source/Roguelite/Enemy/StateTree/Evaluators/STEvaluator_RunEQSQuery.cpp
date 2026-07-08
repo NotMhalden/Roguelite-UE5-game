@@ -7,6 +7,7 @@
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "StateTreeAsyncExecutionContext.h"
 #include "Roguelite/HexGameplayTags.h"
+#include "Roguelite/Enemy/EnemyCharacter.h"
 
 void FSTEvaluator_RunEQSQuery::Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const
 {
@@ -25,6 +26,17 @@ void FSTEvaluator_RunEQSQuery::Tick(FStateTreeExecutionContext& Context, const f
 		FEnvQueryRequest Request(Data.EnvironmentQuery, Data.Owner);
 		Request.SetFloatParam(FName("Donut.InnerRadius"), Data.InnerRadius);
 		Request.SetFloatParam(FName("Donut.OuterRadius"), Data.OuterRadius);
+		if (AEnemyCharacter* EnemyOwner = Cast<AEnemyCharacter>(Data.Owner))
+		{
+			Request.SetFloatParam(FName("Distance.FloatValueMin"), EnemyOwner -> MinimumRangeToPlayer);
+			
+			Request.SetFloatParam(FName("Standoff.Ideal"), EnemyOwner -> IdealDistance);
+			Request.SetFloatParam(FName("Standoff.ScoreClampMax"),EnemyOwner -> IdealDistance + EnemyOwner -> DistanceFalloff);
+			
+			Request.SetFloatParam(FName("HeightDistance.Ideal"), EnemyOwner -> IdealHeightDistance);
+			Request.SetFloatParam(FName("HeightDistance.ScoreClampMin"), EnemyOwner -> IdealHeightDistance - EnemyOwner -> PositioningHeightThreshold);
+			Request.SetFloatParam(FName("HeightDistance.ScoreClampMax"), EnemyOwner -> IdealHeightDistance + EnemyOwner -> PositioningHeightThreshold);
+		}
 		
 		Data.bInFlight = true;
 		Request.Execute(Data.EQRunMode, FQueryFinishedSignature::CreateLambda(
