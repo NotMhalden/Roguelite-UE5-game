@@ -19,7 +19,7 @@ struct FEQSEvaluatorData
 	UPROPERTY(EditAnywhere, Category="Parameter")
 	TObjectPtr<UEnvQuery> EnvironmentQuery  = nullptr;
 	UPROPERTY(EditAnywhere, Category="Parameter")
-	TEnumAsByte<EEnvQueryRunMode::Type> EQRunMode  = EEnvQueryRunMode::RandomBest5Pct;
+	TEnumAsByte<EEnvQueryRunMode::Type> EQRunMode  = EEnvQueryRunMode::SingleResult;
 	
 	UPROPERTY(EditAnywhere, Category="Parameter")
 	float InnerRadius = 600.f;

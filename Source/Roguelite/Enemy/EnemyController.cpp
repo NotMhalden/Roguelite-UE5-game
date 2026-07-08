@@ -47,7 +47,6 @@ void AEnemyController::Tick(float DeltaTime)
 
 void AEnemyController::OnPlayerPositionDrift()
 {
-
 	StateTreeAIComponent -> SendStateTreeEvent(TAG_Encounter_PlayerReposition.GetTag());	
 }
 

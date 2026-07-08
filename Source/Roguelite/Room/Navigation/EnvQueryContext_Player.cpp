@@ -14,9 +14,5 @@ void UEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, F
 	if (not QueryCharacter)
 		return;
 	
-	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(QueryCharacter);
-	if (not PlayerCharacter)
-		return;
-	
-	UEnvQueryItemType_Actor::SetContextHelper(ContextData, PlayerCharacter);
+	UEnvQueryItemType_Actor::SetContextHelper(ContextData, QueryCharacter);
 }
