@@ -16,12 +16,15 @@ void FSTEvaluator_RunEQSQuery::Tick(FStateTreeExecutionContext& Context, const f
 	if (Data.bInFlight)
 		return;
 	
+	Data.TimeSinceQuery += DeltaTime;
 	
 	const bool bEventPending = Context.HasEventToProcess(TAG_Encounter_PlayerReposition.GetTag());
 	const bool bFirstRun = not Data.bHasQueried;
-	if (bFirstRun or bEventPending)
+	const bool bIntervalElapsed = Data.TimeSinceQuery >= Data.RequeryInterval;
+	if (bFirstRun or bEventPending or bIntervalElapsed)
 	{
 		Data.bHasQueried = true;
+		Data.TimeSinceQuery = 0.f;
 		
 		FEnvQueryRequest Request(Data.EnvironmentQuery, Data.Owner);
 		Request.SetFloatParam(FName("Donut.InnerRadius"), Data.InnerRadius);

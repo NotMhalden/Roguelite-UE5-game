@@ -31,6 +31,9 @@ struct FEQSEvaluatorData
 	
 	bool bInFlight = false;
 	bool bHasQueried = false;
+	
+	float TimeSinceQuery = 0.f;
+	float RequeryInterval = 4.f;
 };
 
 
