@@ -4,11 +4,22 @@
 #include "PCController.h"
 
 #include "PlayerCharacter.h"
+#include "Engine/Engine.h"
 #include "Engine/LocalPlayer.h"
+#include "GameFramework/GameUserSettings.h"
 #include "Roguelite/Weapon/HitscanWeapon.h"
 
 APCController::APCController()
 {
+}
+
+void APCController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	UGameUserSettings* Settings = GEngine->GetGameUserSettings();
+	Settings->SetOverallScalabilityLevel(1);   // Medium
+	Settings->ApplySettings(false);
 }
 
 

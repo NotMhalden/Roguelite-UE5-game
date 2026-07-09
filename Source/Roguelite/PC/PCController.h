@@ -22,6 +22,9 @@ class ROGUELITE_API APCController : public APlayerController
 public:
 	APCController();
 	
+	virtual void BeginPlay() override;
+	
+	
 	UPROPERTY()
 	TObjectPtr<APlayerCharacter> FPSCharacter;
 	
