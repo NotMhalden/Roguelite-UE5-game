@@ -55,13 +55,40 @@ protected:
 	FTimerHandle DashDelayTimerHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Dash", meta = (AllowPrivateAccess = "true", ClampMin = "0.01"))
 	float DashDelay = 0.8f;
-	void DashDelayOver();
 	
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxHealth = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 Health = MaxHealth;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
+	int32 AmountOfJumps = 1;
+	
+	
+public:
+	bool bShouldMantleCheck = false;
+	
+private:
+	bool bIsMantling = false;
+	
+	int MaxMantlingHeight = 250;
+	int MinMantlingHeight = 25;
+	
+	float MantlingTime = 0.3f;
+	float CurrentMantlingAlpha = 0.f;
+	
+	const int MantleTraceDistance = 200;
+	const int MantleTraceHeight = 200;
+	
+	FVector PostMantleSpeed;
+	FVector PostMantleLocation;
+	FVector CurrentMantleLocation;
+
+	
+	
+protected:
+	void DashDelayOver();
 	
 	void SetHealth(int32 NewHealth);
 	int32 GetHealth();
@@ -71,11 +98,19 @@ protected:
 	
 	void TakeDamage(int32 NewHealth);
 	void Death();
+
 	
 public:
 	void MainAction();
 	
 	void Dash(const FInputActionValue& Value);
+	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode = 0) override;
 	
+	virtual void Jump() override;
+	virtual void StopJumping() override;
 	
+	void MantleCheck();
+	void Mantle(float DeltaTime);
+	void MantleFinished();
+
 };

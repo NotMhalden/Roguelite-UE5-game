@@ -94,6 +94,10 @@ void APCController::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 	
+	if (MovementVector.X > 0.f)
+		if (FPSCharacter -> bShouldMantleCheck)
+			FPSCharacter -> MantleCheck();
+	
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 	

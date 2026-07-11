@@ -7,8 +7,10 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/World.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelite/Weapon/HitscanWeapon.h"
+#include "UObject/ReferenceChainSearch.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -24,11 +26,18 @@ APlayerCharacter::APlayerCharacter()
 	
 	GetMesh() -> SetCanEverAffectNavigation(true);
 	GetCapsuleComponent() -> SetCanEverAffectNavigation(true);
+	
+	
+	JumpMaxCount = AmountOfJumps;
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+
+	if (bIsMantling)
+		Mantle(DeltaTime);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -88,21 +97,131 @@ void APlayerCharacter::MainAction()
 void APlayerCharacter::Dash(const FInputActionValue& Value)
 {
 	if (not bIsDashing)
+		return;
+	
+	bIsDashing = true;
+	
+	FVector CurrentVelocity = GetVelocity();
+	CurrentVelocity = FVector(CurrentVelocity.X * DashPower, CurrentVelocity.Y * DashPower, 0);
+	LaunchCharacter(CurrentVelocity, false, false);
+	
+	GetWorldTimerManager().SetTimer(DashDelayTimerHandle, this, &APlayerCharacter::DashDelayOver, DashDelay, false);
+}
+
+void APlayerCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	Super::OnMovementModeChanged(PrevMovementMode, PreviousCustomMode);
+	
+	if (GetCharacterMovement() -> MovementMode == MOVE_Falling)
 	{
-		bIsDashing = true;
-		
-		FVector CurrentVelocity = GetVelocity();
-		CurrentVelocity = FVector(CurrentVelocity.X * DashPower, CurrentVelocity.Y * DashPower, 0);
-		LaunchCharacter(CurrentVelocity, false, false);
-		
-		GetWorldTimerManager().SetTimer(DashDelayTimerHandle, this, &APlayerCharacter::DashDelayOver, DashDelay, false);
+		bShouldMantleCheck = true;
+	}
+	if (GetCharacterMovement() -> MovementMode != MOVE_Falling)
+	{
+		bShouldMantleCheck = false;
 	}
 }
+
+void APlayerCharacter::Jump()
+{
+	Super::Jump();
+	
+}
+
+void APlayerCharacter::StopJumping()
+{
+	Super::StopJumping();
+}
+
+
+
+void APlayerCharacter::MantleCheck()
+{
+	if (bIsMantling)
+		return;
+	
+	const UWorld* World = GetWorld();
+	if (not World)
+		return;
+	
+	
+	FVector TraceStart = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + GetCapsuleComponent() -> GetScaledCapsuleHalfHeight());
+	const FVector TraceDirection = GetActorForwardVector();
+	FVector TraceEnd = TraceStart + TraceDirection * MantleTraceDistance;
+	
+	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_WorldStatic;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	
+	FHitResult Hit;
+	bool bDidHit = World -> LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, TraceChannel, QueryParams);
+	// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Red, false, 2.f, 0, 1.5f);
+	
+	if (not bDidHit)
+	{
+		TraceStart = GetActorLocation();
+		TraceEnd = TraceStart + TraceDirection * MantleTraceDistance;
+		
+		bDidHit = World -> LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, TraceChannel, QueryParams);
+		// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Red, false, 2.f, 0, 1.5f);
+	}
+	
+	if (not bDidHit)
+		return;
+	
+	
+	FVector TopTraceStart = FVector(Hit.Location.X, Hit.Location.Y, Hit.Location.Z + MantleTraceHeight) + TraceDirection * 50;
+	FVector TopTraceEnd = Hit.Location + TraceDirection * 50;
+	
+	FHitResult TopHit;
+	bool bDidTopHit = World -> LineTraceSingleByChannel(TopHit, TopTraceStart, TopTraceEnd, TraceChannel, QueryParams);
+	if (not bDidTopHit)
+		return;
+	
+	// DrawDebugLine(World, TopTraceStart, TopTraceEnd, FColor::Purple, false, 2.f, 0, 1.5f);
+	
+	
+	bIsMantling = true;
+	
+	PostMantleLocation = TopHit.Location + TraceDirection * 100;
+	PostMantleLocation.Z += GetCapsuleComponent() -> GetScaledCapsuleHalfHeight() + 25.f;
+	GetCharacterMovement() -> SetMovementMode(MOVE_None);
+	
+	
+	CurrentMantleLocation = GetActorLocation();
+}
+
+
+void APlayerCharacter::Mantle(float DeltaTime)
+{
+	CurrentMantlingAlpha += DeltaTime / MantlingTime;
+	
+	CurrentMantleLocation = FMath::Lerp(CurrentMantleLocation, PostMantleLocation, CurrentMantlingAlpha);
+	SetActorLocation(CurrentMantleLocation);
+	
+	if (CurrentMantlingAlpha >= 1.f)
+		MantleFinished();
+}
+
+
+void APlayerCharacter::MantleFinished()
+{
+	SetActorLocation(PostMantleLocation);
+	
+	CurrentMantlingAlpha = 0.f;
+	bIsMantling = false;
+	GetCharacterMovement() -> SetMovementMode(MOVE_Walking);
+}
+
+
+
 
 void APlayerCharacter::DashDelayOver()
 {
 	bIsDashing = false;
 }
+
+
 
 
 void APlayerCharacter::SetHealth(int32 NewHealth)

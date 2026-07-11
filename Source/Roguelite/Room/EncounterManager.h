@@ -76,7 +76,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<APlayerCharacter> PlayerCharacter = nullptr;
 	UPROPERTY(EditDefaultsOnly)
-	float PlayerPositionDriftThreshold = 300.f;
+	float PlayerPositionDriftThreshold = 500.f;
 	UPROPERTY(VisibleAnywhere)
 	float PlayerPositionDrift = 0.f;
 	FVector PlayerPositionBeforeDrift;

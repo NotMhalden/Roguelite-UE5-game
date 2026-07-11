@@ -72,7 +72,7 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	QueryParams.bTraceComplex = false;
-	QueryParams.bReturnPhysicalMaterial = true;
+	QueryParams.bReturnPhysicalMaterial = false;
 	
 	// Perform trace
 	FHitResult Hit;
