@@ -26,7 +26,6 @@ public:
 	
 	UFUNCTION()
 	void OnPlayerPositionDrift();
-	FDelegateHandle OnPlayerPositionDriftDelegateHandle;
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
@@ -36,4 +35,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStateTreeAIComponent> StateTreeAIComponent = nullptr;
 
+	FDelegateHandle OnPlayerPositionDriftDelegateHandle;
+	
 };

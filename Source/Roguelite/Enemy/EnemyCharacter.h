@@ -3,13 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EnemyDelegates.h"
 #include "BehaviorTree/Tasks/BTTask_RunDynamicStateTree.h"
 #include "GameFramework/Character.h"
 #include "Navigation/NavLinkProxy.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "EnemyCharacter.generated.h"
 
+
 class AEncounterManager;
+
 
 
 
@@ -49,6 +52,19 @@ public:
 	
 	void TakeDamage(int DamageTaken);
 	void Death();
+	
+	
+	void OnAttackFinished();
+	
+protected:
+	/**
+	 * This function is called, once the token is changed.
+	 * Token can bw changed if another enemy should rather have it.
+	 */
+	void OnTokenChange();
+	
+	
+public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxHealth = 75;
@@ -56,9 +72,10 @@ public:
 	int32 Health = MaxHealth;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<AEncounterManager> EncounterManager = nullptr;
+	TWeakObjectPtr<AEncounterManager> EncounterManager = nullptr;
 	
 	
+	FOnEnemyTokenChange OnEnemyTokenChange;
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true", 

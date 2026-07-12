@@ -49,8 +49,8 @@ float AEncounterManager::CalculatePlayerPositionDrift()
 		{
 			PlayerPositionBeforeDrift = PlayerPosition;
 			
-			if (PlayerPositionDriftedDelegate.IsBound())
-				PlayerPositionDriftedDelegate.Broadcast();
+			if (OnPlayerPositionDrifted.IsBound())
+				OnPlayerPositionDrifted.Broadcast();
 		}
 	}
 	return PlayerPositionDrift;
@@ -139,7 +139,7 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		TObjectPtr<AEnemyController> EnemyController = Cast<AEnemyController>(SpawnedEnemy -> GetController());
 		if (EnemyController)
 		{
-			EnemyController -> OnPlayerPositionDriftDelegateHandle = PlayerPositionDriftedDelegate.AddUObject(EnemyController, &AEnemyController::OnPlayerPositionDrift);
+			EnemyController -> OnPlayerPositionDriftDelegateHandle = OnPlayerPositionDrifted.AddUObject(EnemyController, &AEnemyController::OnPlayerPositionDrift);
 		}
 		SpawnedEnemy -> EncounterManager = this;
 		AmountOfEnemies++;

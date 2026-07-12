@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyCharacter.h"
+#include "WalkingEnemy.h"
 #include "EnemyShooter.generated.h"
 
 UCLASS()
-class ROGUELITE_API AEnemyShooter : public AEnemyCharacter
+class ROGUELITE_API AEnemyShooter : public AWalkingEnemy
 {
 	GENERATED_BODY()
 

@@ -5,8 +5,17 @@
 #include "CoreMinimal.h"
 
 
+class AEnemyCharacter;
 
+
+
+DECLARE_DELEGATE(FOnEnemyTokenChange)
 
 DECLARE_MULTICAST_DELEGATE(FOnEnemyDeathDelegate)
 inline FOnEnemyDeathDelegate OnEnemyDeathDelegate;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnEnemyAttackFinished, TWeakObjectPtr<AEnemyCharacter> /* RecentAttacker */)
+inline FOnEnemyAttackFinished OnEnemyAttackFinished;
+
+DECLARE_MULTICAST_DELEGATE(FOnPlayerPositionDrifted)
+inline FOnPlayerPositionDrifted OnPlayerPositionDrifted; 

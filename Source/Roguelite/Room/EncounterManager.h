@@ -10,8 +10,7 @@ class AEnemyCharacter;
 class APlayerCharacter;
 
 
-DECLARE_MULTICAST_DELEGATE(FPlayerPositionDriftedDelegate)
-inline FPlayerPositionDriftedDelegate PlayerPositionDriftedDelegate; 
+
 
 
 UCLASS()

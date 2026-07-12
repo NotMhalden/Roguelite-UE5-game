@@ -3,6 +3,7 @@
 
 #include "EnemyController.h"
 
+#include "EnemyDelegates.h"
 #include "Engine/World.h"
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Roguelite/HexGameplayTags.h"
@@ -66,6 +67,6 @@ void AEnemyController::OnUnPossess()
 {
 	Super::OnUnPossess();
 	
-	PlayerPositionDriftedDelegate.Remove(OnPlayerPositionDriftDelegateHandle);
+	OnPlayerPositionDrifted.Remove(OnPlayerPositionDriftDelegateHandle);
 }
 

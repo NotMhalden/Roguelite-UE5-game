@@ -13,6 +13,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "Roguelite/Room/CombatManager.h"
 
 
 // Sets default values
@@ -185,3 +186,12 @@ void AEnemyCharacter::Death()
 	Destroy();
 }
 
+void AEnemyCharacter::OnAttackFinished()
+{
+	OnEnemyAttackFinished.Broadcast(this);
+}
+
+
+void AEnemyCharacter::OnTokenChange()
+{
+}
