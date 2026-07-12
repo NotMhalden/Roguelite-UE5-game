@@ -84,6 +84,7 @@ private:
 	FVector PostMantleSpeed;
 	FVector PostMantleLocation;
 	FVector CurrentMantleLocation;
+	FVector PreMantleLocation;
 
 	
 	

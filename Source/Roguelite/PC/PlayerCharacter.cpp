@@ -188,15 +188,14 @@ void APlayerCharacter::MantleCheck()
 	GetCharacterMovement() -> SetMovementMode(MOVE_None);
 	
 	
-	CurrentMantleLocation = GetActorLocation();
+	PreMantleLocation = GetActorLocation();
 }
 
 
 void APlayerCharacter::Mantle(float DeltaTime)
 {
 	CurrentMantlingAlpha += DeltaTime / MantlingTime;
-	
-	CurrentMantleLocation = FMath::Lerp(CurrentMantleLocation, PostMantleLocation, CurrentMantlingAlpha);
+	CurrentMantleLocation = FMath::Lerp(PreMantleLocation, PostMantleLocation, CurrentMantlingAlpha);
 	SetActorLocation(CurrentMantleLocation);
 	
 	if (CurrentMantlingAlpha >= 1.f)
