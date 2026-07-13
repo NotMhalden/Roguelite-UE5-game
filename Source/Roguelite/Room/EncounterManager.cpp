@@ -3,6 +3,7 @@
 
 #include "EncounterManager.h"
 
+#include "CombatManager.h"
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
@@ -104,12 +105,17 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		const int32 CapsuleHalfHeight = EnemyClassToSpawn.GetDefaultObject() -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
 		DestinationData.Location = FVector(DestinationData.Location.X, DestinationData.Location.Y, DestinationData.Location.Z + CapsuleHalfHeight);
 		
-		AActor* SpawnedActor = GetWorld() -> SpawnActor(EnemyClassToSpawn.Get(), &DestinationData.Location);
-		AEnemyCharacter* SpawnedEnemy = Cast<AEnemyCharacter>(SpawnedActor);
+		FTransform EnemyTransform;
+		EnemyTransform.SetLocation(DestinationData.Location);
+		
+		AEnemyCharacter* SpawnedEnemy = GetWorld() -> SpawnActorDeferred<AEnemyCharacter>(EnemyClassToSpawn.Get(), EnemyTransform);
 		if (not SpawnedEnemy)
 		{
 			continue;
 		}
+		
+		SpawnedEnemy -> EncounterManager = this;
+		
 		
 		if (not SpawnedEnemy -> EnemyPositioningNurtureChance.IsEmpty())
 		{
@@ -135,13 +141,13 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 			}
 		}
 		
+		SpawnedEnemy -> FinishSpawning(EnemyTransform);
 		
 		TObjectPtr<AEnemyController> EnemyController = Cast<AEnemyController>(SpawnedEnemy -> GetController());
 		if (EnemyController)
 		{
 			EnemyController -> OnPlayerPositionDriftDelegateHandle = OnPlayerPositionDrifted.AddUObject(EnemyController, &AEnemyController::OnPlayerPositionDrift);
 		}
-		SpawnedEnemy -> EncounterManager = this;
 		AmountOfEnemies++;
 	}
 }
@@ -155,6 +161,12 @@ void AEncounterManager::OnEnemyDeath()
 	}
 }
 
+bool AEncounterManager::EnemyRequestAttack(TWeakObjectPtr<AEnemyCharacter> EnemyRequester, int32 AttackCost)
+{
+	if (CombatManager -> RequestAttack(EnemyRequester, AttackCost))
+		return true;
+	return false;
+}
 
 
 TObjectPtr<APlayerCharacter> AEncounterManager::GetPlayerCharacter()
@@ -170,6 +182,11 @@ float AEncounterManager::GetPlayerPositionDrift()
 float AEncounterManager::GetPlayerPositionDriftThreshold()
 {
 	return PlayerPositionDriftThreshold;
+}
+
+TWeakObjectPtr<UCombatManager> AEncounterManager::GetCombatManager()
+{
+	return CombatManager;
 }
 
 

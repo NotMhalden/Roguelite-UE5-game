@@ -16,7 +16,7 @@ class AEnemyCharacter;
 /**
  * 
  */
-UCLASS()
+UCLASS(EditInlineNew)
 class ROGUELITE_API UCombatManager : public UObject
 {
 	GENERATED_BODY()
@@ -26,7 +26,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Token", meta=(AllowPrivateAccess))
-	int32 TotalAttackTokens = 40;
+	int32 TotalAttackTokens = 5;
 	UPROPERTY(VisibleAnywhere, Category = "Token", meta=(AllowPrivateAccess))
 	int32 AvailableAttackTokens = TotalAttackTokens;
 	
@@ -36,6 +36,9 @@ protected:
 	
 public:
 	bool RequestAttack(TWeakObjectPtr<AEnemyCharacter> EnemyRequester, int32 AttackTokenCost);
+	bool IsAttackPossible(int32 AttackTokenCost);
+	
+	int32 GetAmountOfAttackers();
 
 protected:
 	bool UseTokens(int32 Tokens);
@@ -44,6 +47,7 @@ protected:
 	bool RegisterEnemyAsAttacker(TWeakObjectPtr<AEnemyCharacter> NewAttacker, int32 TokensToUse);
 	bool RemoveEnemyAsAttacker(TWeakObjectPtr<AEnemyCharacter> AttackerToRemove);
 	
+	UFUNCTION()
 	void EnemyFinishedAttack(TWeakObjectPtr<AEnemyCharacter> FinishedAttacker);
 	
 };

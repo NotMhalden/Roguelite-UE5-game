@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "EncounterManager.generated.h"
 
+class UCombatManager;
 class AEnemyCharacter;
 class APlayerCharacter;
 
@@ -36,9 +37,13 @@ public:
 	
 	void OnEnemyDeath();
 	
+	bool EnemyRequestAttack(TWeakObjectPtr<AEnemyCharacter> EnemyRequester, int32 AttackCost);
+	
 	TObjectPtr<APlayerCharacter> GetPlayerCharacter();
 	float GetPlayerPositionDrift();
 	float GetPlayerPositionDriftThreshold();
+	
+	TWeakObjectPtr<UCombatManager> GetCombatManager();
 	
 	
 public:
@@ -50,7 +55,6 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<AEnemyCharacter>> ActiveEnemyClasses;
-	
 	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
@@ -70,6 +74,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0.f))
 	float PositioningHeightPlateau = PositioningHeightThreshold/2;
+
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -79,4 +84,10 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	float PlayerPositionDrift = 0.f;
 	FVector PlayerPositionBeforeDrift;
+	
+	
+protected:
+	UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCombatManager> CombatManager;
+
 };

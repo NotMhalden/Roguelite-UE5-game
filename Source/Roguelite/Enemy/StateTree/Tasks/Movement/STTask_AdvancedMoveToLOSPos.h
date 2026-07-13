@@ -12,7 +12,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName = "Advanced MoveTo LOS Position")
 class ROGUELITE_API USTTask_AdvancedMoveToLOSPos : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
