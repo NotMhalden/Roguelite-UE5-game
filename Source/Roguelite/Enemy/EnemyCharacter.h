@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyDelegates.h"
+#include "Attacks/EnemyAttack.h"
 #include "BehaviorTree/Tasks/BTTask_RunDynamicStateTree.h"
 #include "GameFramework/Character.h"
 #include "Navigation/NavLinkProxy.h"
@@ -54,6 +55,7 @@ public:
 	void Death();
 	
 	
+	bool RequestAttack(int32 AttackCost);
 	void OnAttackFinished();
 	
 protected:
@@ -75,9 +77,13 @@ public:
 	TWeakObjectPtr<AEncounterManager> EncounterManager = nullptr;
 	
 	
+public:
 	FOnEnemyTokenChange OnEnemyTokenChange;
+
+	UPROPERTY(EditAnywhere, Instanced, Category = "Data|Attacks")
+	TArray<UEnemyAttack*> Attacks;
 	
-	
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true", 
 		ClampMin = "0", ClampMax = "100", UIMin = "0", UIMax = "100"))
 	TMap<EEnemyElevationPositioning, int32> EnemyPositioningNurtureChance;

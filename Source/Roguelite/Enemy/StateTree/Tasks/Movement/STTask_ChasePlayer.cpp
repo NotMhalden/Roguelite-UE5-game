@@ -29,7 +29,7 @@ EStateTreeRunStatus USTTask_ChasePlayer::EnterState(FStateTreeExecutionContext& 
 	}
 	
 	// Checks if there is an AI Controller
-	if (not AIController)
+	if (not EnemyController)
 	{
 		UE_LOG(LogTemp, Error, TEXT("AIController ptr error"));
 		return RunStatus = EStateTreeRunStatus::Failed;
@@ -43,7 +43,7 @@ EStateTreeRunStatus USTTask_ChasePlayer::EnterState(FStateTreeExecutionContext& 
 		return RunStatus = EStateTreeRunStatus::Failed;
 	}
 	
-	TObjectPtr<AEncounterManager> EncounterManager = Enemy -> EncounterManager;
+	TObjectPtr<AEncounterManager> EncounterManager = Enemy -> EncounterManager.Get();
 	if (not EncounterManager)
 	{
 		UE_LOG(LogTemp, Error, TEXT("EncounterManager ptr error"));
@@ -58,7 +58,7 @@ EStateTreeRunStatus USTTask_ChasePlayer::EnterState(FStateTreeExecutionContext& 
 	}
 	
 	
-	AIController -> MoveToActor(PlayerCharacter, AcceptanceRadius);
+	EnemyController -> MoveToActor(PlayerCharacter, AcceptanceRadius);
 	
 	return (RunStatus = EStateTreeRunStatus::Running);
 
@@ -68,11 +68,11 @@ EStateTreeRunStatus USTTask_ChasePlayer::EnterState(FStateTreeExecutionContext& 
 
 EStateTreeRunStatus USTTask_ChasePlayer::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {
-	if (not AIController)
+	if (not EnemyController)
 	{
 		return RunStatus = EStateTreeRunStatus::Failed;
 	}
-	if (AIController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
+	if (EnemyController -> GetMoveStatus() == EPathFollowingStatus::Type::Idle)
 	{
 		return (RunStatus = EStateTreeRunStatus::Succeeded);
 	}

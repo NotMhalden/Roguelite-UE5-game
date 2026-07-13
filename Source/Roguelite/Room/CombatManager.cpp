@@ -3,8 +3,11 @@
 
 #include "CombatManager.h"
 
+#include "Roguelite/Enemy/EnemyDelegates.h"
+
 UCombatManager::UCombatManager()
 {
+	OnEnemyAttackFinished.AddUObject(this, &UCombatManager::EnemyFinishedAttack);
 }
 
 
@@ -21,12 +24,24 @@ bool UCombatManager::RequestAttack(TWeakObjectPtr<AEnemyCharacter> EnemyRequeste
 	 * Add better token calculations later.
 	 * Current implementation works fine for now
 	*/
-	if (not RegisterEnemyAsAttacker(EnemyRequester, AttackTokenCost))
+	if (RegisterEnemyAsAttacker(EnemyRequester, AttackTokenCost))
+		return true;
+	
+	return false;
+}
+
+bool UCombatManager::IsAttackPossible(int32 AttackTokenCost)
+{
+	if (AvailableAttackTokens <= 0 or AvailableAttackTokens < AttackTokenCost)
 		return false;
 	
 	return true;
 }
 
+int32 UCombatManager::GetAmountOfAttackers()
+{
+	return CurrentAttackers.Num();
+}
 
 
 bool UCombatManager::UseTokens(int32 Tokens)

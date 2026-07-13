@@ -11,7 +11,8 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName = "Chase Player")
+
 class ROGUELITE_API USTTask_ChasePlayer : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
@@ -32,7 +33,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AEnemyCharacter> Enemy = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<AAIController> AIController = nullptr;
+	TObjectPtr<AAIController> EnemyController = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	float AcceptanceRadius = -1.f;

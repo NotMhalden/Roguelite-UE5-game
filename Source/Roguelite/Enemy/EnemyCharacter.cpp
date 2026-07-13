@@ -13,7 +13,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
-#include "Roguelite/Room/CombatManager.h"
+#include "Roguelite/Room/EncounterManager.h"
 
 
 // Sets default values
@@ -184,6 +184,13 @@ void AEnemyCharacter::Death()
 		OnEnemyDeathDelegate.Broadcast();
 	}
 	Destroy();
+}
+
+bool AEnemyCharacter::RequestAttack(int32 AttackCost)
+{
+	if (EncounterManager -> EnemyRequestAttack(this, AttackCost))
+		return true;
+	return false;
 }
 
 void AEnemyCharacter::OnAttackFinished()

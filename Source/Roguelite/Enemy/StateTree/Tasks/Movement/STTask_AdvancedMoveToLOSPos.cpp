@@ -54,7 +54,7 @@ EStateTreeRunStatus USTTask_AdvancedMoveToLOSPos::EnterState(FStateTreeExecution
 		return RunStatus = EStateTreeRunStatus::Failed;
 	}
 	
-	TObjectPtr<AEncounterManager> EncounterManager = Enemy -> EncounterManager;
+	TObjectPtr<AEncounterManager> EncounterManager = Enemy -> EncounterManager.Get();
 	if (not EncounterManager)
 	{
 		UE_LOG(LogTemp, Error, TEXT("EncounterManager ptr error"));
