@@ -91,6 +91,7 @@ private:
 protected:
 	void DashDelayOver();
 	
+public:
 	void SetHealth(int32 NewHealth);
 	int32 GetHealth();
 	
