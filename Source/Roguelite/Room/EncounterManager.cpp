@@ -51,7 +51,9 @@ float AEncounterManager::CalculatePlayerPositionDrift()
 			PlayerPositionBeforeDrift = PlayerPosition;
 			
 			if (OnPlayerPositionDrifted.IsBound())
+			{
 				OnPlayerPositionDrifted.Broadcast();
+			}
 		}
 	}
 	return PlayerPositionDrift;

@@ -16,7 +16,7 @@ bool UEnemyProjectileShoot::Begin(AEnemyCharacter* Self, AActor* TargetActor)
 
 bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, float DeltaTime)
 {
-	return false;
+	return true;
 }
 
 int32 UEnemyProjectileShoot::Score(AEnemyCharacter* Self, AActor* TargetActor)

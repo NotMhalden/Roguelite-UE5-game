@@ -182,6 +182,9 @@ void AEnemyCharacter::Death()
 	if (OnEnemyDeathDelegate.IsBound())
 	{
 		OnEnemyDeathDelegate.Broadcast();
+		
+		if (RemoveEnemyAttacker.IsBound())
+			RemoveEnemyAttacker.Broadcast(this);
 	}
 	Destroy();
 }
@@ -193,9 +196,20 @@ bool AEnemyCharacter::RequestAttack(int32 AttackCost)
 	return false;
 }
 
-void AEnemyCharacter::OnAttackFinished()
+void AEnemyCharacter::AttackFinished()
 {
-	OnEnemyAttackFinished.Broadcast(this);
+	if (RemoveEnemyAttacker.IsBound())
+		RemoveEnemyAttacker.Broadcast(this);
+}
+
+void AEnemyCharacter::OnPlayerPositionDrift()
+{
+	if (AEnemyController* EnemyController = Cast<AEnemyController>(GetController()))
+	{
+		EnemyController -> OnPlayerPositionDrift();
+	}
+	if (RemoveEnemyAttacker.IsBound())
+		RemoveEnemyAttacker.Broadcast(this);
 }
 
 

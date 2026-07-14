@@ -40,7 +40,7 @@ EStateTreeRunStatus USTTask_Attack::EnterState(FStateTreeExecutionContext& Conte
 		return RunStatus = EStateTreeRunStatus::Failed;
 	
 	if (CurrentAttack and CurrentAttack -> Begin( Enemy.Get(), Enemy->EncounterManager->GetPlayerCharacter() ))
-		return RunStatus = EStateTreeRunStatus::Succeeded;
+		return RunStatus = EStateTreeRunStatus::Running;
 	
 	return RunStatus = EStateTreeRunStatus::Running;
 }
@@ -53,7 +53,10 @@ EStateTreeRunStatus USTTask_Attack::Tick(FStateTreeExecutionContext& Context, co
 		return RunStatus = EStateTreeRunStatus::Failed;
 	
 	if (CurrentAttack and CurrentAttack -> Tick( Enemy.Get(), Enemy->EncounterManager->GetPlayerCharacter(), DeltaTime ))
+	{
+		Enemy -> AttackFinished();
 		return RunStatus = EStateTreeRunStatus::Succeeded;
+	}
 	
 	return RunStatus = EStateTreeRunStatus::Running;
 }

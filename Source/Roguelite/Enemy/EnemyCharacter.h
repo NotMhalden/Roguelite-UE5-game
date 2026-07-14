@@ -56,7 +56,8 @@ public:
 	
 	
 	bool RequestAttack(int32 AttackCost);
-	void OnAttackFinished();
+	void AttackFinished();
+	void OnPlayerPositionDrift();
 	
 protected:
 	/**

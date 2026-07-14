@@ -7,7 +7,7 @@
 
 UCombatManager::UCombatManager()
 {
-	OnEnemyAttackFinished.AddUObject(this, &UCombatManager::EnemyFinishedAttack);
+	RemoveEnemyAttacker.AddUObject(this, &UCombatManager::EnemyFinishedAttack);
 }
 
 

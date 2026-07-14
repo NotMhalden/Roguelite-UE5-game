@@ -11,13 +11,13 @@ UEnemyAttack::UEnemyAttack()
 
 bool UEnemyAttack::Begin(AEnemyCharacter* Self, AActor* TargetActor)
 {
-	return false;
+	return true;
 }
 
 
 bool UEnemyAttack::Tick(AEnemyCharacter* Self, AActor* TargetActor, float DeltaTime)
 {
-	return false;
+	return true;
 }
 
 
