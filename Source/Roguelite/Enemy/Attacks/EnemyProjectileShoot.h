@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyAttack.h"
+#include "Roguelite/Weapon/Bullet/BulletBase.h"
 #include "EnemyProjectileShoot.generated.h"
 
 /**
@@ -19,4 +20,28 @@ public:
 	virtual bool Begin(AEnemyCharacter* Self, AActor* TargetActor) override;
 	virtual bool Tick(AEnemyCharacter* Self, AActor* TargetActor, float DeltaTime) override;
 	virtual int32 Score(AEnemyCharacter* Self, AActor* TargetActor) override;
+	
+protected:
+	void FireRateDelayOver();
+	
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
+	int32 Damage = 10;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
+	float FireRate = 30;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
+	int32 AmountOfShots = 10;
+	int32 CurrentShots = 0;
+	
+protected:
+	FTimerHandle FireRateTimerHandle;
+	bool bWeaponCooling = false;
+	float FireRateCooldown = 0.1f;
+	
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ABulletBase> BulletClass = nullptr;
 };

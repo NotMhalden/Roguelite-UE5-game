@@ -3,6 +3,7 @@
 
 #include "EnemyProjectile.h"
 
+#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Roguelite/PC/PlayerCharacter.h"
 
@@ -13,11 +14,19 @@ AEnemyProjectile::AEnemyProjectile()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	BulletSpeed = 5500.f;
+	BulletSpeed = 800.f;
+	BulletDamage = 1.f;
 	
 	MovementComponent -> InitialSpeed = BulletSpeed;
 	MovementComponent -> MaxSpeed = BulletSpeed;
 	MovementComponent -> ProjectileGravityScale = 0.f;
+	
+	Mesh -> SetRelativeScale3D(FVector(0.0625f,0.0625f,0.0625f));
+	Mesh -> SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	
+	SphereComponent -> SetSphereRadius(25.f);
+	SphereComponent -> SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	
 }
 
 // Called when the game starts or when spawned

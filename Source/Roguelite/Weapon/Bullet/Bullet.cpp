@@ -22,6 +22,8 @@ ABullet::ABullet()
 	MovementComponent -> MaxSpeed = BulletSpeed;
 	MovementComponent -> ProjectileGravityScale = 0.f;
 	InitialLifeSpan = BulletLifespan;
+	
+	SphereComponent -> SetSphereRadius(45.f);
 }
 
 // Called when the game starts or when spawned
