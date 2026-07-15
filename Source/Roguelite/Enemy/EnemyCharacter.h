@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyDelegates.h"
-#include "Attacks/EnemyAttack.h"
+#include "Attacks/EnemyAttackBase.h"
 #include "BehaviorTree/Tasks/BTTask_RunDynamicStateTree.h"
 #include "GameFramework/Character.h"
 #include "Navigation/NavLinkProxy.h"
@@ -87,7 +87,7 @@ public:
 	FOnEnemyTokenChange OnEnemyTokenChange;
 
 	UPROPERTY(EditAnywhere, Instanced, Category = "Data|Attacks")
-	TArray<UEnemyAttack*> Attacks;
+	TArray<UEnemyAttackBase*> Attacks;
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data|AI", meta = (AllowPrivateAccess = "true", 

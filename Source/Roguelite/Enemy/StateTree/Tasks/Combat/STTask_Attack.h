@@ -39,7 +39,7 @@ protected:
 	
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 	
-	TObjectPtr<UEnemyAttack> SelectBestAttack();
+	TObjectPtr<UEnemyAttackBase> SelectBestAttack();
 	
 	
 protected:
@@ -49,5 +49,5 @@ protected:
 	TObjectPtr<AEnemyController> EnemyController = nullptr;
 	
 	UPROPERTY()
-	TObjectPtr<UEnemyAttack> CurrentAttack = nullptr;
+	TObjectPtr<UEnemyAttackBase> CurrentAttack = nullptr;
 };

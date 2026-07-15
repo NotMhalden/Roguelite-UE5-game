@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "UObject/Object.h"
-#include "EnemyAttack.generated.h"
+#include "EnemyAttackBase.generated.h"
 
 
 class AEnemyCharacter;
@@ -24,12 +24,12 @@ enum class EAttackType: uint8
  * 
  */
 UCLASS(Abstract, EditInlineNew)
-class ROGUELITE_API UEnemyAttack : public UObject
+class ROGUELITE_API UEnemyAttackBase : public UObject
 {
 	GENERATED_BODY()
 	
 public:
-	UEnemyAttack();
+	UEnemyAttackBase();
 	virtual bool Begin(AEnemyCharacter* Self, AActor* TargetActor);
 	virtual bool Tick(AEnemyCharacter* Self, AActor* TargetActor, float DeltaTime);
 	virtual int32 Score(AEnemyCharacter* Self, AActor* TargetActor);
@@ -38,7 +38,7 @@ public:
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AttackData", meta = (AllowPrivateAccess = "true"))
-	int32 TokenCost = 1;
+	int32 TokenCost = 0;
 	
 	EAttackType AttackType;
 };

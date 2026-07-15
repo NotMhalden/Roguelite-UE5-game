@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyAttack.h"
+#include "EnemyAttackBase.h"
 #include "Roguelite/Weapon/Bullet/BulletBase.h"
 #include "EnemyProjectileShoot.generated.h"
 
@@ -11,7 +11,7 @@
  * 
  */
 UCLASS(EditInlineNew, DisplayName = "Projectile Shoot")
-class ROGUELITE_API UEnemyProjectileShoot : public UEnemyAttack
+class ROGUELITE_API UEnemyProjectileShoot : public UEnemyAttackBase
 {
 	GENERATED_BODY()
 
@@ -27,10 +27,10 @@ protected:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
-	int32 Damage = 10;
+	int32 Damage = 5;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
-	float FireRate = 1;
+	float FireRate = 2;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
 	int32 AmountOfShots = 5;

@@ -63,7 +63,7 @@ EStateTreeRunStatus USTTask_Attack::Tick(FStateTreeExecutionContext& Context, co
 
 
 
-TObjectPtr<UEnemyAttack> USTTask_Attack::SelectBestAttack()
+TObjectPtr<UEnemyAttackBase> USTTask_Attack::SelectBestAttack()
 {
 	if (Enemy -> Attacks.IsEmpty())
 		return nullptr;
@@ -79,21 +79,21 @@ TObjectPtr<UEnemyAttack> USTTask_Attack::SelectBestAttack()
 
 	
 	
-	TArray<TPair<UEnemyAttack*, int32>> PossibleAttacks;
+	TArray<TPair<UEnemyAttackBase*, int32>> PossibleAttacks;
 	
-	for (UEnemyAttack* Attack : Enemy -> Attacks)
+	for (UEnemyAttackBase* Attack : Enemy -> Attacks)
 	{
 		float AttackScore = Attack -> Score( Enemy.Get(), Enemy->EncounterManager->GetPlayerCharacter() );
 		
 		PossibleAttacks.Add({Attack, AttackScore});
 	}
 	
-	TArray<TPair<UEnemyAttack*, int32>> PossibleAttacksSorted;
+	TArray<TPair<UEnemyAttackBase*, int32>> PossibleAttacksSorted;
 	
 	bool bAttacksIsSorted = false;
 	while (not bAttacksIsSorted)
 	{
-		TPair<UEnemyAttack*, int32> LowestScoredAttack = {nullptr, TNumericLimits<int32>::Max()};
+		TPair<UEnemyAttackBase*, int32> LowestScoredAttack = {nullptr, TNumericLimits<int32>::Max()};
 		for (TPair PossibleAttack : PossibleAttacks)
 		{
 			if (PossibleAttack.Value < LowestScoredAttack.Value)

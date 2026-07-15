@@ -14,7 +14,7 @@ AEnemyProjectile::AEnemyProjectile()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	BulletSpeed = 1000.f;
+	BulletSpeed = 1400.f;
 	BulletDamage = 1.f;
 	
 	MovementComponent -> InitialSpeed = BulletSpeed;
