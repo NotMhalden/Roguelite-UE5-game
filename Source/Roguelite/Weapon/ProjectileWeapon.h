@@ -27,7 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 public:
-	virtual void MainAction(FVector CameraForwardVector, FVector CameraLocation) override;
+	virtual void MainAttack(FVector CameraForwardVector, FVector CameraLocation) override;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))

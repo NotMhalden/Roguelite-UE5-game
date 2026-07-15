@@ -89,7 +89,7 @@ void APlayerCharacter::MainAction()
 		return;
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("Player shoots"));
-	CurrentWeapon -> MainAction(Camera -> GetForwardVector(), Camera -> GetComponentLocation());
+	CurrentWeapon -> MainAttack(Camera -> GetForwardVector(), Camera -> GetComponentLocation());
 }
 
 

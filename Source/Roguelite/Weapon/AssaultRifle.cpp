@@ -29,8 +29,8 @@ void AAssaultRifle::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AAssaultRifle::MainAction(FVector CameraForwardVector, FVector CameraLocation)
+void AAssaultRifle::MainAttack(FVector CameraForwardVector, FVector CameraLocation)
 {
-	Super::MainAction(CameraForwardVector, CameraLocation);
+	Super::MainAttack(CameraForwardVector, CameraLocation);
 }
 

@@ -17,16 +17,12 @@ AHitscanWeapon::AHitscanWeapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh -> SetupAttachment(GetRootComponent());
+
 
 	
-	
+	Damage = 25;
+	AttackRate = 8.f;
 	TraceChannel = ECC_Visibility;
-	
-	
-	Damage = 10;
-	AttackRate = 10.f;
 }
 
 // Called when the game starts or when spawned
@@ -43,7 +39,7 @@ void AHitscanWeapon::Tick(float DeltaTime)
 
 }
 
-void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocation)
+void AHitscanWeapon::MainAttack(FVector CameraForwardVector, FVector CameraLocation)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Main Action done"))
 	if (bWeaponCooling)
@@ -79,7 +75,7 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	const bool bDidHit = World -> LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, TraceChannel, QueryParams);
 	// UE_LOG(LogTemp, Warning, TEXT("Hitscan shot"))
 	
-	DrawDebugLine(World, FakeBulletTraceStart, FakeBulletTraceEnd, FColor::Orange, false, 0.01f, 0, 1.5f);
+	DrawDebugLine(World, FakeBulletTraceStart, FakeBulletTraceEnd, FColor::Orange, false, 0.04f, 0, 2.0f);
 	
 	
 	// No hit
@@ -114,9 +110,3 @@ void AHitscanWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocat
 	GetWorldTimerManager().SetTimer(AttackRateTimerHandle, this, &AHitscanWeapon::FireRateDelayOver, AttackRateCooldown, false);
 
 }
-
-void AHitscanWeapon::FireRateDelayOver()
-{
-	bWeaponCooling = false;
-}
-

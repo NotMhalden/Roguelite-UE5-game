@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "WeaponBase.h"
 #include "HitscanWeapon.generated.h"
 
 
@@ -13,7 +13,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FGetCameraForwardVectorDelegate, FVector /*C
 inline FGetCameraForwardVectorDelegate GetCameraForwardVectorDelegate;
 
 UCLASS()
-class ROGUELITE_API AHitscanWeapon : public AActor
+class ROGUELITE_API AHitscanWeapon : public AWeaponBase
 {
 	GENERATED_BODY()
 	
@@ -28,29 +28,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
-	
-public:
-	virtual void MainAction(FVector CameraForwardVector, FVector CameraLocation);
-	
-	void FireRateDelayOver();
-	
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UStaticMeshComponent> Mesh = nullptr;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
-	int32 Damage = 10;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
-	float AttackRate = 10;
-	
-	
+	virtual void MainAttack(FVector CameraForwardVector, FVector CameraLocation) override;
+
 protected:
-	FTimerHandle AttackRateTimerHandle;
-	bool bWeaponCooling = false;
-	float AttackRateCooldown = 0.1f;
-	
 	//ray casting for shooting
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_Camera;

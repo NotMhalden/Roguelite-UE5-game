@@ -49,5 +49,5 @@ public:
 	float BulletLifespan;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
-	int32 BulletDamage = 15;
+	int32 BulletDamage = 1;
 };

@@ -14,8 +14,8 @@ AProjectileWeapon::AProjectileWeapon()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	Damage = 10;
-	AttackRate = 10.f;
+	Damage = 25;
+	AttackRate = 5.f;
 }
 
 // Called when the game starts or when spawned
@@ -31,7 +31,7 @@ void AProjectileWeapon::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AProjectileWeapon::MainAction(FVector CameraForwardVector, FVector CameraLocation)
+void AProjectileWeapon::MainAttack(FVector CameraForwardVector, FVector CameraLocation)
 {
 	if (bWeaponCooling)
 	{

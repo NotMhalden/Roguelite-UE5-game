@@ -3,6 +3,7 @@
 
 #include "EnemyProjectileShoot.h"
 
+#include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
@@ -37,8 +38,14 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	bWeaponCooling = true;
 	
 	const FVector SpawnLocation = Self -> GetActorLocation() + Self -> GetActorForwardVector() * 70.0;
-	const FVector TargetLocation = TargetActor->GetActorLocation() + TargetActor->GetVelocity() * 50.0;
+	
+	const float DistanceToPlayer = (TargetActor->GetActorLocation() - SpawnLocation).Size();
+	const float PredictionWeight = DistanceToPlayer / BulletClass.GetDefaultObject()->BulletSpeed;
+	const FVector TargetLocation = TargetActor->GetActorLocation() + TargetActor->GetVelocity() * PredictionWeight;
+	
 	const FVector Direction = (TargetLocation - SpawnLocation).GetSafeNormal();
+	
+	DrawDebugSphere(World, TargetLocation, 50.f, 12, FColor::Cyan, false, 2.f);
 	
 	
 	FActorSpawnParameters ActorSpawnParams;
