@@ -113,6 +113,8 @@ TObjectPtr<UEnemyAttack> USTTask_Attack::SelectBestAttack()
 	
 	for (int AttackIndex = PossibleAttacksSorted.Num() -1; AttackIndex >= 0; AttackIndex--)
 	{
+		if (PossibleAttacksSorted[AttackIndex].Value == 0)
+			continue;
 		if (Enemy -> EncounterManager -> GetCombatManager() -> IsAttackPossible(PossibleAttacksSorted[AttackIndex].Value))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Amount of Attackers: %d"), Enemy -> EncounterManager -> GetCombatManager() ->GetAmountOfAttackers())

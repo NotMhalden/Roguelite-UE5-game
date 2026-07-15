@@ -10,7 +10,7 @@
 
 UEnemyProjectileShoot::UEnemyProjectileShoot()
 {
-	TokenCost = 1;
+	TokenCost = 2;
 }
 
 bool UEnemyProjectileShoot::Begin(AEnemyCharacter* Self, AActor* TargetActor)
@@ -37,7 +37,7 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	bWeaponCooling = true;
 	
 	const FVector SpawnLocation = Self -> GetActorLocation() + Self -> GetActorForwardVector() * 70.0;
-	const FVector TargetLocation = TargetActor->GetActorLocation() + TargetActor->GetVelocity() * 100.0;
+	const FVector TargetLocation = TargetActor->GetActorLocation() + TargetActor->GetVelocity() * 50.0;
 	const FVector Direction = (TargetLocation - SpawnLocation).GetSafeNormal();
 	
 	
@@ -58,7 +58,26 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 
 int32 UEnemyProjectileShoot::Score(AEnemyCharacter* Self, AActor* TargetActor)
 {
-	return 0;
+	if (not Self)
+		return 0;
+	if (not TargetActor)
+		return 0;
+	
+	UWorld* World = GetWorld();
+	if (not World)
+		return 0;
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(Self);
+	ECollisionChannel TraceChannel = ECC_Camera;
+	
+	FHitResult Hit;
+	const bool bDidHit = World -> LineTraceSingleByChannel(Hit, Self->GetActorLocation(), TargetActor->GetActorLocation(), TraceChannel, QueryParams);
+	
+	if (not bDidHit)
+		return 0;
+	
+	return TokenCost;
 }
 
 void UEnemyProjectileShoot::FireRateDelayOver()

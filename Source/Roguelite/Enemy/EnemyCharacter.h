@@ -12,6 +12,7 @@
 #include "EnemyCharacter.generated.h"
 
 
+class UBoxComponent;
 class AEncounterManager;
 
 
@@ -68,7 +69,11 @@ protected:
 	
 	
 public:
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBoxComponent> TriggerBox = nullptr;
+	
+	
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxHealth = 75;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))

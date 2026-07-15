@@ -8,6 +8,7 @@
 #include "EnemyDelegates.h"
 #include "NavigationSystem.h"
 #include "TimerManager.h"
+#include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -21,6 +22,10 @@ AEnemyCharacter::AEnemyCharacter()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger Box"));
+	TriggerBox -> SetupAttachment(GetMesh());
+	
 	
 	GetCapsuleComponent() -> InitCapsuleSize(45.0f, 90.0f);
 	GetCapsuleComponent() -> SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);

@@ -30,10 +30,10 @@ public:
 	int32 Damage = 10;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
-	float FireRate = 30;
+	float FireRate = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
-	int32 AmountOfShots = 10;
+	int32 AmountOfShots = 5;
 	int32 CurrentShots = 0;
 	
 protected:
