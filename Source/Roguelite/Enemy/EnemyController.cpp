@@ -25,8 +25,8 @@ AEnemyController::AEnemyController(const FObjectInitializer& ObjectInitializer)
 	if (CrowdFollowingComponent)
 	{
 		CrowdFollowingComponent -> SetCrowdSeparation(true);
-		CrowdFollowingComponent -> SetCrowdSeparationWeight(3.f);
-		CrowdFollowingComponent -> SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Medium);
+		CrowdFollowingComponent -> SetCrowdSeparationWeight(10.f);
+		CrowdFollowingComponent -> SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Good);
 		CrowdFollowingComponent -> SetCrowdOptimizeVisibility(true);
 		CrowdFollowingComponent -> SetCrowdPathOptimizationRange(3500.f);
 	}

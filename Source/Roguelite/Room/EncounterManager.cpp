@@ -150,6 +150,8 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		{
 			EnemyController -> OnPlayerPositionDriftDelegateHandle = OnPlayerPositionDrifted.AddUObject(EnemyController, &AEnemyController::OnPlayerPositionDrift);
 		}
+		
+		Enemies.Add(SpawnedEnemy);
 		AmountOfEnemies++;
 	}
 }
