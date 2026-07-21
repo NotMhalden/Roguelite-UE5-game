@@ -3,6 +3,7 @@
 
 #include "PlayerCharacter.h"
 
+#include "PlayerDelegates.h"
 #include "TimerManager.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -76,6 +77,9 @@ void APlayerCharacter::BeginPlay()
 		FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepRelative, true);
 		CurrentWeapon -> AttachToComponent(Camera, AttachmentRules);
 	}
+	
+	if (OnPlayerHealthChange.IsBound())
+		OnPlayerHealthChange.Broadcast(Health, MaxHealth);
 	
 }
 
@@ -226,6 +230,8 @@ void APlayerCharacter::DashDelayOver()
 void APlayerCharacter::SetHealth(int32 NewHealth)
 {
 	Health = NewHealth;
+	if (OnPlayerHealthChange.IsBound())
+		OnPlayerHealthChange.Broadcast(Health, MaxHealth);
 }
 
 
@@ -240,6 +246,8 @@ int32 APlayerCharacter::GetHealth()
 void APlayerCharacter::SetMaxHealth(int32 NewMaxHealth)
 {
 	MaxHealth = NewMaxHealth;
+	if (OnPlayerHealthChange.IsBound())
+		OnPlayerHealthChange.Broadcast(Health, MaxHealth);
 }
 
 

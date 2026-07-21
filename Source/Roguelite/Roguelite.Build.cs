@@ -19,7 +19,10 @@ public class Roguelite : ModuleRules
 			"AIModule",
 			"NavigationSystem",
 			"GameplayTasks",
-			"GameplayTags"
+			"GameplayTags",
+			"UMG",
+			"Slate",
+			"SlateCore"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
