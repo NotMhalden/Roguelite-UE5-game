@@ -36,6 +36,7 @@ void AEncounterManager::BeginPlay()
 	}
 	
 	SpawnEnemies(AmountOfEnemiesToSpawn);
+	PlayerVelocityOverTime = PlayerCharacter -> GetVelocity();
 	CalculatePlayerPositionDrift();
 }
 
@@ -60,12 +61,28 @@ float AEncounterManager::CalculatePlayerPositionDrift()
 }
 
 
+
+void AEncounterManager::CalculatePlayerVelocity(float DeltaTime)
+{
+	if (not PlayerCharacter)
+		return;
+	
+	const float PlayerVelocityAlpha = 1.f - FMath::Exp(-DeltaTime / PlayerVelocitySmoothingTime);
+	
+	const FVector VelocityDelta = (PlayerCharacter->GetVelocity() - PlayerVelocityOverTime ) * PlayerVelocityAlpha;
+	PlayerVelocityOverTime = PlayerVelocityOverTime + VelocityDelta;
+}
+
+
+
+
 // Called every frame
 void AEncounterManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
 	CalculatePlayerPositionDrift();
+	CalculatePlayerVelocity(DeltaTime);
 }
 
 
@@ -186,6 +203,11 @@ float AEncounterManager::GetPlayerPositionDrift()
 float AEncounterManager::GetPlayerPositionDriftThreshold()
 {
 	return PlayerPositionDriftThreshold;
+}
+
+FVector AEncounterManager::GetPlayerVelocityOverTime()
+{
+	return PlayerVelocityOverTime;
 }
 
 TWeakObjectPtr<UCombatManager> AEncounterManager::GetCombatManager()

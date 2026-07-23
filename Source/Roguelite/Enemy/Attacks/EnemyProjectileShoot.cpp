@@ -7,6 +7,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
+#include "Roguelite/PC/PlayerCharacter.h"
+#include "Roguelite/Room/EncounterManager.h"
 #include "Roguelite/Weapon/Bullet/BulletBase.h"
 
 UEnemyProjectileShoot::UEnemyProjectileShoot()
@@ -31,6 +33,9 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	if (not BulletClass)
 		return false;
 	
+	if (not LOSCheck(Self, TargetActor->GetActorLocation()))
+		return true;
+	
 	UWorld* const World = GetWorld();
 	if (not World)
 		return false;
@@ -41,11 +46,14 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	
 	const float DistanceToPlayer = (TargetActor->GetActorLocation() - SpawnLocation).Size();
 	const float PredictionWeight = DistanceToPlayer / BulletClass.GetDefaultObject()->BulletSpeed;
-	const FVector TargetLocation = TargetActor->GetActorLocation() + TargetActor->GetVelocity() * PredictionWeight;
+	const FVector TargetLocation = TargetActor->GetActorLocation() + Self->EncounterManager->GetPlayerVelocityOverTime() * PredictionWeight;
 	
 	const FVector Direction = (TargetLocation - SpawnLocation).GetSafeNormal();
 	
-	DrawDebugSphere(World, TargetLocation, 50.f, 12, FColor::Cyan, false, 2.f);
+	if (not LOSCheck(Self, TargetActor->GetActorLocation(), false))
+		return true;
+	
+	DrawDebugSphere(World, TargetLocation, 50.f, 12, FColor::Cyan, false, PredictionWeight);
 	
 	
 	FActorSpawnParameters ActorSpawnParams;
@@ -63,6 +71,8 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	return false;
 }
 
+
+
 int32 UEnemyProjectileShoot::Score(AEnemyCharacter* Self, AActor* TargetActor)
 {
 	if (not Self)
@@ -70,24 +80,44 @@ int32 UEnemyProjectileShoot::Score(AEnemyCharacter* Self, AActor* TargetActor)
 	if (not TargetActor)
 		return 0;
 	
+	if (not LOSCheck(Self, TargetActor->GetActorLocation()))
+		return 0;
+	
+	return TokenCost;
+}
+
+
+
+void UEnemyProjectileShoot::FireRateDelayOver()
+{
+	bWeaponCooling = false;
+}
+
+
+
+
+bool UEnemyProjectileShoot::LOSCheck(AEnemyCharacter* Self, FVector TargetLocation, bool bShouldHitPlayer)
+{
 	UWorld* World = GetWorld();
 	if (not World)
-		return 0;
+		return false;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(Self);
 	ECollisionChannel TraceChannel = ECC_Camera;
 	
 	FHitResult Hit;
-	const bool bDidHit = World -> LineTraceSingleByChannel(Hit, Self->GetActorLocation(), TargetActor->GetActorLocation(), TraceChannel, QueryParams);
+	const bool bDidHit = World -> LineTraceSingleByChannel(Hit, Self->GetActorLocation(), TargetLocation, TraceChannel, QueryParams);
 	
 	if (not bDidHit)
-		return 0;
+		return false;
 	
-	return TokenCost;
-}
-
-void UEnemyProjectileShoot::FireRateDelayOver()
-{
-	bWeaponCooling = false;
+	if (bShouldHitPlayer)
+	{
+		APlayerCharacter* PC = Cast<APlayerCharacter>(Hit.GetActor());
+		if (not PC)
+			return false;
+	}
+	
+	return true;
 }

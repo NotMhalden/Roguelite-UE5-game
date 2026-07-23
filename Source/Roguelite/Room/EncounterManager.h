@@ -28,6 +28,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	float CalculatePlayerPositionDrift();
+	
+	void CalculatePlayerVelocity(float DeltaTime);
 
 public:
 	// Called every frame
@@ -43,7 +45,10 @@ public:
 	float GetPlayerPositionDrift();
 	float GetPlayerPositionDriftThreshold();
 	
+	FVector GetPlayerVelocityOverTime();
+	
 	TWeakObjectPtr<UCombatManager> GetCombatManager();
+	
 	
 	
 public:
@@ -79,11 +84,17 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<APlayerCharacter> PlayerCharacter = nullptr;
+	
 	UPROPERTY(EditDefaultsOnly)
 	float PlayerPositionDriftThreshold = 500.f;
 	UPROPERTY(VisibleAnywhere)
 	float PlayerPositionDrift = 0.f;
 	FVector PlayerPositionBeforeDrift;
+	
+	UPROPERTY(VisibleAnywhere)
+	FVector PlayerVelocityOverTime;
+	UPROPERTY(EditDefaultsOnly, meta=(ClampMin = 0.f))
+	float PlayerVelocitySmoothingTime = 0.3f;
 	
 	
 protected:

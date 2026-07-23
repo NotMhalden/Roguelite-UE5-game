@@ -14,12 +14,17 @@ AEnemyProjectile::AEnemyProjectile()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	BulletSpeed = 1400.f;
+	BulletSpeed = 3000.f;
 	BulletDamage = 1.f;
 	
 	MovementComponent -> InitialSpeed = BulletSpeed;
 	MovementComponent -> MaxSpeed = BulletSpeed;
 	MovementComponent -> ProjectileGravityScale = 0.f;
+	
+	/*
+	MovementComponent -> bIsHomingProjectile = true;
+	MovementComponent -> HomingAccelerationMagnitude = 0.5f;
+	*/
 	
 	Mesh -> SetRelativeScale3D(FVector(0.1f,0.1f,0.1f));
 	Mesh -> SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);

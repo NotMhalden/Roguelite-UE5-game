@@ -100,7 +100,7 @@ void APlayerCharacter::MainAction()
 
 void APlayerCharacter::Dash(const FInputActionValue& Value)
 {
-	if (not bIsDashing)
+	if (bIsDashing)
 		return;
 	
 	bIsDashing = true;

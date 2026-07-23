@@ -24,6 +24,9 @@ public:
 protected:
 	void FireRateDelayOver();
 	
+private:
+	bool LOSCheck(AEnemyCharacter* Self, FVector TargetLocation, bool bShouldHitPlayer = true);
+	
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
