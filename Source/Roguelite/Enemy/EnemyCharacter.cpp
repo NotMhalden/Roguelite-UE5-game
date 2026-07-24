@@ -36,6 +36,10 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCharacterMovement() -> MaxStepHeight = 45.0f;
 	GetCharacterMovement() -> GravityScale = 9.f;
 	
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement() -> bUseControllerDesiredRotation = true;
+	GetCharacterMovement() -> RotationRate = FRotator(0.0f, 180.0f, 0.0f);
+	
 	
 	
 	TArray<EEnemyElevationPositioning> EnemyPositionKeys;

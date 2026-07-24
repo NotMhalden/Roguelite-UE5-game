@@ -39,10 +39,10 @@ protected:
 	
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 	
+	virtual void ExitState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
+	
 	TObjectPtr<UEnemyAttackBase> SelectBestAttack();
-	
-	
-protected:
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AEnemyCharacter> Enemy = nullptr;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input", meta = (AllowPrivateAccess = "true"))

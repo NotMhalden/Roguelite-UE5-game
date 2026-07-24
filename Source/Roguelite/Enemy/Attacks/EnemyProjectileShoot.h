@@ -25,15 +25,23 @@ protected:
 	void FireRateDelayOver();
 	
 private:
-	bool LOSCheck(AEnemyCharacter* Self, FVector TargetLocation, bool bShouldHitPlayer = true);
+	bool HasLOS(AEnemyCharacter* Self, FVector StartLocation, FVector TargetLocation);
+	bool IsPathBlocked(AEnemyCharacter* Self, AActor* TargetToIgnore, FVector StartLocation, FVector TargetLocation);
+	
+	void Reset();
+	
 	
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
 	int32 Damage = 5;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
 	float FireRate = 2;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0"))
+	float MinAccuracy = 0.6f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0"))
+	float MaxAccuracy = 0.9f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true", ClampMax = "15.0"))
 	int32 AmountOfShots = 5;

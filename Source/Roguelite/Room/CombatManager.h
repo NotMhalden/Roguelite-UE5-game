@@ -26,7 +26,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Token", meta=(AllowPrivateAccess))
-	int32 TotalAttackTokens = 5;
+	int32 TotalAttackTokens = 10;
 	UPROPERTY(VisibleAnywhere, Category = "Token", meta=(AllowPrivateAccess))
 	int32 AvailableAttackTokens = TotalAttackTokens;
 	

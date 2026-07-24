@@ -39,6 +39,7 @@ EStateTreeRunStatus USTTask_Attack::EnterState(FStateTreeExecutionContext& Conte
 	if (not CurrentAttack)
 		return RunStatus = EStateTreeRunStatus::Failed;
 	
+	EnemyController -> SetFocus(Enemy->EncounterManager->GetPlayerCharacter());
 	if (CurrentAttack and CurrentAttack -> Begin( Enemy.Get(), Enemy->EncounterManager->GetPlayerCharacter() ))
 		return RunStatus = EStateTreeRunStatus::Running;
 	
@@ -53,13 +54,21 @@ EStateTreeRunStatus USTTask_Attack::Tick(FStateTreeExecutionContext& Context, co
 		return RunStatus = EStateTreeRunStatus::Failed;
 	
 	if (CurrentAttack and CurrentAttack -> Tick( Enemy.Get(), Enemy->EncounterManager->GetPlayerCharacter(), DeltaTime ))
-	{
-		Enemy -> AttackFinished();
 		return RunStatus = EStateTreeRunStatus::Succeeded;
-	}
 	
 	return RunStatus = EStateTreeRunStatus::Running;
 }
+
+
+
+void USTTask_Attack::ExitState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
+{
+	Super::ExitState(Context, Transition);
+	
+	Enemy -> AttackFinished();
+	EnemyController -> ClearFocus(EAIFocusPriority::Gameplay);
+}
+
 
 
 

@@ -26,19 +26,31 @@ bool UEnemyProjectileShoot::Begin(AEnemyCharacter* Self, AActor* TargetActor)
 bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, float DeltaTime)
 {
 	if (CurrentShots >= AmountOfShots)
+	{
+		Reset();
 		return true;
+	}
 	
 	if (bWeaponCooling)
 		return false;
 	if (not BulletClass)
 		return false;
 	
-	if (not LOSCheck(Self, TargetActor->GetActorLocation()))
+	if (not HasLOS(Self, Self->GetActorLocation(),TargetActor->GetActorLocation()))
+	{
+		Reset();
 		return true;
+	}
 	
 	UWorld* const World = GetWorld();
 	if (not World)
 		return false;
+	
+	if (not Self->EncounterManager.Get())
+	{
+		Reset();
+		return true;
+	}
 	
 	bWeaponCooling = true;
 	
@@ -46,12 +58,18 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	
 	const float DistanceToPlayer = (TargetActor->GetActorLocation() - SpawnLocation).Size();
 	const float PredictionWeight = DistanceToPlayer / BulletClass.GetDefaultObject()->BulletSpeed;
-	const FVector TargetLocation = TargetActor->GetActorLocation() + Self->EncounterManager->GetPlayerVelocityOverTime() * PredictionWeight;
+	
+	const float Accuracy = FMath::FRandRange(MinAccuracy, MaxAccuracy);
+	const FVector TargetLocation = TargetActor->GetActorLocation() + Self->EncounterManager->GetPlayerVelocityOverTime() * PredictionWeight * Accuracy;
 	
 	const FVector Direction = (TargetLocation - SpawnLocation).GetSafeNormal();
 	
-	if (not LOSCheck(Self, TargetActor->GetActorLocation(), false))
+	
+	if (IsPathBlocked(Self, TargetActor, SpawnLocation, TargetLocation))
+	{
+		Reset();
 		return true;
+	}
 	
 	DrawDebugSphere(World, TargetLocation, 50.f, 12, FColor::Cyan, false, PredictionWeight);
 	
@@ -80,7 +98,7 @@ int32 UEnemyProjectileShoot::Score(AEnemyCharacter* Self, AActor* TargetActor)
 	if (not TargetActor)
 		return 0;
 	
-	if (not LOSCheck(Self, TargetActor->GetActorLocation()))
+	if (not HasLOS(Self, Self->GetActorLocation(), TargetActor->GetActorLocation()))
 		return 0;
 	
 	return TokenCost;
@@ -96,7 +114,7 @@ void UEnemyProjectileShoot::FireRateDelayOver()
 
 
 
-bool UEnemyProjectileShoot::LOSCheck(AEnemyCharacter* Self, FVector TargetLocation, bool bShouldHitPlayer)
+bool UEnemyProjectileShoot::HasLOS(AEnemyCharacter* Self, FVector StartLocation, FVector TargetLocation)
 {
 	UWorld* World = GetWorld();
 	if (not World)
@@ -107,17 +125,42 @@ bool UEnemyProjectileShoot::LOSCheck(AEnemyCharacter* Self, FVector TargetLocati
 	ECollisionChannel TraceChannel = ECC_Camera;
 	
 	FHitResult Hit;
-	const bool bDidHit = World -> LineTraceSingleByChannel(Hit, Self->GetActorLocation(), TargetLocation, TraceChannel, QueryParams);
+	const bool bDidHit = World -> LineTraceSingleByChannel(Hit, StartLocation, TargetLocation, TraceChannel, QueryParams);
 	
 	if (not bDidHit)
 		return false;
 	
-	if (bShouldHitPlayer)
-	{
-		APlayerCharacter* PC = Cast<APlayerCharacter>(Hit.GetActor());
-		if (not PC)
-			return false;
-	}
+	APlayerCharacter* PC = Cast<APlayerCharacter>(Hit.GetActor());
+	if (not PC)
+		return false;
 	
 	return true;
+}
+
+bool UEnemyProjectileShoot::IsPathBlocked(AEnemyCharacter* Self, AActor* TargetToIgnore, FVector StartLocation, FVector TargetLocation)
+{
+	UWorld* World = GetWorld();
+	if (not World)
+		return true;
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(Self);
+	QueryParams.AddIgnoredActor(TargetToIgnore);
+	
+	FCollisionObjectQueryParams ObjectParams;
+	ObjectParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	
+	FHitResult Hit;
+	const bool bDidHit = World -> LineTraceSingleByObjectType(Hit, StartLocation, TargetLocation, ObjectParams, QueryParams);
+	
+	if (bDidHit)
+		return true;
+	
+	return false;
+}
+
+void UEnemyProjectileShoot::Reset()
+{
+	bWeaponCooling = false;
 }
