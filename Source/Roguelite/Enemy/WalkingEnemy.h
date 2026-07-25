@@ -27,7 +27,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void PossessedBy(AController* NewController) override;
-	
+	virtual void ApplyChanges() override;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	float MaxSpeed = 800.f;	
 	

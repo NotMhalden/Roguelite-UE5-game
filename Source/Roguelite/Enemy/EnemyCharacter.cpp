@@ -60,6 +60,8 @@ AEnemyCharacter::AEnemyCharacter()
 			continue;
 		}
 	}
+	
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 
@@ -69,6 +71,8 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	GetWorldTimerManager().SetTimer(SafetyNetTimerHandle, this, &AEnemyCharacter::MovementSafetyNet, 2.f, false);
+	
+	Health = MaxHealth;
 }
 
 
@@ -88,6 +92,51 @@ void AEnemyCharacter::Landed(const FHitResult& Hit)
 		ActiveJumpLink.Reset();
 	}
 }
+
+
+
+
+#if WITH_EDITOR
+void AEnemyCharacter::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+	
+	const FName PropertyChangedName = PropertyChangedEvent.GetPropertyName();
+	
+	if (PropertyChangedEvent.ChangeType & EPropertyChangeType::Interactive)
+	{
+		return;
+	}
+
+	ApplyChanges();
+	
+	if (PropertyChangedName == GET_MEMBER_NAME_CHECKED(AEnemyCharacter, MaxHealth))
+	{
+		Health = MaxHealth;
+	}
+	if (PropertyChangedName == GET_MEMBER_NAME_CHECKED(AEnemyCharacter, Health))
+	{
+		if (Health > MaxHealth)
+			Health = MaxHealth;
+	}
+}
+#endif
+
+void AEnemyCharacter::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	ApplyChanges();
+}
+
+void AEnemyCharacter::ApplyChanges()
+{
+	GetCharacterMovement() -> RotationRate = FRotator(0.0f, RotationSpeed, 0.0f);
+}
+
+
+
+
+
 
 void AEnemyCharacter::MovementSafetyNet()
 {

@@ -11,8 +11,6 @@ AWalkingEnemy::AWalkingEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	GetCharacterMovement() -> MaxWalkSpeed = MaxSpeed;
-	
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 // Called when the game starts or when spawned
@@ -33,4 +31,8 @@ void AWalkingEnemy::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 }
 
-
+void AWalkingEnemy::ApplyChanges()
+{
+	Super::ApplyChanges();
+	GetCharacterMovement() -> MaxWalkSpeed = MaxSpeed;
+}

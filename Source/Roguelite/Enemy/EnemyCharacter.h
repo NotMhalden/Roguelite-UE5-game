@@ -47,7 +47,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void Landed(const FHitResult& Hit) override;
+	
+	
+	
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 
+	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void ApplyChanges();
+	
 	UFUNCTION()
 	void MovementSafetyNet();
 	
@@ -65,8 +74,7 @@ protected:
 	 * Token can bw changed if another enemy should rather have it.
 	 */
 	void OnTokenChange();
-	
-	
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBoxComponent> HitBox = nullptr;
