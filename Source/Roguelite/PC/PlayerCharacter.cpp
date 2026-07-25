@@ -157,12 +157,15 @@ void APlayerCharacter::MantleCheck()
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	
+	
+	// Tracing from the top of the player character
 	FHitResult Hit;
 	bool bDidHit = World -> LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, TraceChannel, QueryParams);
 	// DrawDebugLine(World, TraceStart, TraceEnd, FColor::Red, false, 2.f, 0, 1.5f);
 	
 	if (not bDidHit)
 	{
+		// Tracing from the center of the player character
 		TraceStart = GetActorLocation();
 		TraceEnd = TraceStart + TraceDirection * MantleTraceDistance;
 		
@@ -174,25 +177,59 @@ void APlayerCharacter::MantleCheck()
 		return;
 	
 	
-	FVector TopTraceStart = FVector(Hit.Location.X, Hit.Location.Y, Hit.Location.Z + MantleTraceHeight) + TraceDirection * 50;
+	// Tracing from above
+	FVector TopTraceStart = FVector(
+		Hit.Location.X, 
+		Hit.Location.Y, 
+		Hit.Location.Z + MantleTraceHeight) + TraceDirection * 50;
+	
 	FVector TopTraceEnd = Hit.Location + TraceDirection * 50;
 	
 	FHitResult TopHit;
 	bool bDidTopHit = World -> LineTraceSingleByChannel(TopHit, TopTraceStart, TopTraceEnd, TraceChannel, QueryParams);
-	if (not bDidTopHit)
+	if (not bDidTopHit or TopHit.bStartPenetrating)
 		return;
 	
 	// DrawDebugLine(World, TopTraceStart, TopTraceEnd, FColor::Purple, false, 2.f, 0, 1.5f);
 	
 	
-	bIsMantling = true;
+	
 	
 	PostMantleLocation = TopHit.Location + TraceDirection * 100;
 	PostMantleLocation.Z += GetCapsuleComponent() -> GetScaledCapsuleHalfHeight() + 25.f;
-	GetCharacterMovement() -> SetMovementMode(MOVE_None);
+	
+	
+	FVector PlayerXMantleCorner = GetActorLocation();
+	PlayerXMantleCorner.Z = PostMantleLocation.Z;
+	
+	
+	// Pytagoras thingy. Checking edges and not the straight line
+	FHitResult MantleLegCheck1Hit;
+	bool bDidMantleLegCheck1Hit = World -> LineTraceSingleByChannel(MantleLegCheck1Hit, GetActorLocation(), PlayerXMantleCorner, TraceChannel, QueryParams);
+	if (bDidMantleLegCheck1Hit or MantleLegCheck1Hit.bStartPenetrating)
+		return;
+	
+	FHitResult MantleLegCheck2Hit;
+	bool bDidMantleLegCheck2Hit = World -> LineTraceSingleByChannel(MantleLegCheck2Hit, PlayerXMantleCorner, PostMantleLocation, TraceChannel, QueryParams);
+	if (bDidMantleLegCheck2Hit or MantleLegCheck2Hit.bStartPenetrating)
+		return;
+	
+	
+	// Checking if the player capsule fits
+	const bool bDoesPlayerCollide = World -> OverlapBlockingTestByChannel(
+		PostMantleLocation,
+		GetActorRotation().Quaternion(), 
+		ECC_Visibility, 
+		GetCapsuleComponent()->GetCollisionShape(),
+		QueryParams);
+	
+	if (bDoesPlayerCollide)
+		return;
 	
 	
 	PreMantleLocation = GetActorLocation();
+	GetCharacterMovement() -> SetMovementMode(MOVE_None);
+	bIsMantling = true;
 }
 
 
