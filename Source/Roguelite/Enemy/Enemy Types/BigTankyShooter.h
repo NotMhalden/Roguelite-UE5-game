@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WalkingEnemy.h"
-#include "EnemyShooter.generated.h"
+#include "Roguelite/Enemy/WalkingEnemy.h"
+#include "BigTankyShooter.generated.h"
 
 UCLASS()
-class ROGUELITE_API AEnemyShooter : public AWalkingEnemy
+class ROGUELITE_API ABigTankyShooter : public AWalkingEnemy
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	AEnemyShooter();
+	// Sets default values for this character's properties
+	ABigTankyShooter();
 
 protected:
 	// Called when the game starts or when spawned

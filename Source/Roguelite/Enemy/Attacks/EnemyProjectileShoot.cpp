@@ -6,10 +6,10 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Projectiles/EnemyProjectile.h"
 #include "Roguelite/Enemy/EnemyCharacter.h"
 #include "Roguelite/PC/PlayerCharacter.h"
 #include "Roguelite/Room/EncounterManager.h"
-#include "Roguelite/Weapon/Bullet/BulletBase.h"
 
 UEnemyProjectileShoot::UEnemyProjectileShoot()
 {

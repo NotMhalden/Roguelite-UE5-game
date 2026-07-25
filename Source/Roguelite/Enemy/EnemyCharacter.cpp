@@ -23,8 +23,8 @@ AEnemyCharacter::AEnemyCharacter()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger Box"));
-	TriggerBox -> SetupAttachment(GetMesh());
+	HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger Box"));
+	HitBox -> SetupAttachment(GetMesh());
 	
 	
 	GetCapsuleComponent() -> InitCapsuleSize(45.0f, 90.0f);
@@ -38,7 +38,7 @@ AEnemyCharacter::AEnemyCharacter()
 	
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement() -> bUseControllerDesiredRotation = true;
-	GetCharacterMovement() -> RotationRate = FRotator(0.0f, 180.0f, 0.0f);
+	GetCharacterMovement() -> RotationRate = FRotator(0.0f, RotationSpeed, 0.0f);
 	
 	
 	

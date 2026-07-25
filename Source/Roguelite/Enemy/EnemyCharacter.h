@@ -26,7 +26,6 @@ enum class EEnemyElevationPositioning: uint8
 	EEEP_SameLevel		UMETA(DisplayName="Same Level"),
 	EEEP_Above			UMETA(DisplayName="Above"),
 	EEEP_HighAbove		UMETA(DisplayName="High Above"),
-	EEEP_Any			UMETA(DisplayName="Any")
 };
 
 
@@ -70,7 +69,7 @@ protected:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UBoxComponent> TriggerBox = nullptr;
+	TObjectPtr<UBoxComponent> HitBox = nullptr;
 	
 	
 public:
@@ -78,6 +77,12 @@ public:
 	int32 MaxHealth = 75;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 Health = MaxHealth;
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	float RotationSpeed = 180.f;
+	
+public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TWeakObjectPtr<AEncounterManager> EncounterManager = nullptr;

@@ -29,5 +29,6 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
-	float MaxSpeed = 800.f;
+	float MaxSpeed = 800.f;	
+	
 };

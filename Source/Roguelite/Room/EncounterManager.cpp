@@ -117,16 +117,18 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 			continue;
 		}
 		
-		
+		// Setting the spawn paramaters for enemy, instead of instantly spawning
 		FActorSpawnParameters SpawnParameters;
 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 		
+		// Setting where the player should spawn
 		const int32 CapsuleHalfHeight = EnemyClassToSpawn.GetDefaultObject() -> GetCapsuleComponent() -> GetScaledCapsuleHalfHeight();
-		DestinationData.Location = FVector(DestinationData.Location.X, DestinationData.Location.Y, DestinationData.Location.Z + CapsuleHalfHeight);
+		DestinationData.Location = FVector(DestinationData.Location.X, DestinationData.Location.Y, DestinationData.Location.Z + CapsuleHalfHeight*1.1f);
 		
 		FTransform EnemyTransform;
 		EnemyTransform.SetLocation(DestinationData.Location);
 		
+		// Setting up the spawning
 		AEnemyCharacter* SpawnedEnemy = GetWorld() -> SpawnActorDeferred<AEnemyCharacter>(EnemyClassToSpawn.Get(), EnemyTransform);
 		if (not SpawnedEnemy)
 		{
@@ -136,6 +138,8 @@ void AEncounterManager::SpawnEnemies(int32 AmountToSpawn)
 		SpawnedEnemy -> EncounterManager = this;
 		
 		
+		
+		// Setting up the height positioning nurture for the enemy
 		if (not SpawnedEnemy -> EnemyPositioningNurtureChance.IsEmpty())
 		{
 			const int32 EnemyPositioningNurtureChance = FMath::RandRange(0, 100);

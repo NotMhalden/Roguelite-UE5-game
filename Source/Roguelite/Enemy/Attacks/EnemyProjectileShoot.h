@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "EnemyAttackBase.h"
-#include "Roguelite/Weapon/Bullet/BulletBase.h"
 #include "EnemyProjectileShoot.generated.h"
 
+class AEnemyProjectile;
 /**
  * 
  */
@@ -54,5 +54,5 @@ protected:
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AttackData", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<ABulletBase> BulletClass = nullptr;
+	TSubclassOf<AEnemyProjectile> BulletClass = nullptr;
 };
