@@ -153,7 +153,7 @@ void APlayerCharacter::MantleCheck()
 	const FVector TraceDirection = GetActorForwardVector();
 	FVector TraceEnd = TraceStart + TraceDirection * MantleTraceDistance;
 	
-	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_WorldStatic;
+	ECollisionChannel TraceChannel = ECC_WorldStatic;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 	

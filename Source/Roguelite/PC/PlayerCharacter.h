@@ -75,11 +75,10 @@ private:
 	int MaxMantlingHeight = 250;
 	int MinMantlingHeight = 25;
 	
-	float MantlingTime = 0.3f;
+	float MantlingTime = 0.25f;
 	float CurrentMantlingAlpha = 0.f;
-	
-	const int MantleTraceDistance = 200;
-	const int MantleTraceHeight = 200;
+	const int MantleTraceDistance = 150;
+	const int MantleTraceHeight = 150;
 	
 	FVector PostMantleSpeed;
 	FVector PostMantleLocation;
