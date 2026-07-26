@@ -18,7 +18,7 @@ UEnemyProjectileShoot::UEnemyProjectileShoot()
 
 bool UEnemyProjectileShoot::Begin(AEnemyCharacter* Self, AActor* TargetActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Projectile Shoot"))
+	// UE_LOG(LogTemp, Warning, TEXT("Projectile Shoot"))
 	CurrentShots = 0;
 	return true;
 }
@@ -77,7 +77,7 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	FActorSpawnParameters ActorSpawnParams;
 	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
-	UE_LOG(LogTemp, Warning, TEXT("Enemy shot"));
+	// UE_LOG(LogTemp, Warning, TEXT("Enemy shot"));
 	auto* Bullet = World -> SpawnActor<ABulletBase>(BulletClass, SpawnLocation, Direction.Rotation(), ActorSpawnParams);
 	Bullet -> BulletDamage *= Damage;
 

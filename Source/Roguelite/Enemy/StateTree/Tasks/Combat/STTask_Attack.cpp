@@ -80,7 +80,7 @@ TObjectPtr<UEnemyAttackBase> USTTask_Attack::SelectBestAttack()
 	{
 		if (Enemy -> EncounterManager -> GetCombatManager() -> IsAttackPossible(Enemy->Attacks[0]->GetTokenCost()))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Amount of Attackers: %d"), Enemy -> EncounterManager -> GetCombatManager() ->GetAmountOfAttackers())
+			// UE_LOG(LogTemp, Warning, TEXT("Amount of Attackers: %d"), Enemy -> EncounterManager -> GetCombatManager() ->GetAmountOfAttackers())
 			Enemy -> EncounterManager -> GetCombatManager() -> RequestAttack(Enemy, Enemy -> Attacks[0]->GetTokenCost());
 			return Enemy -> Attacks[0];
 		}
@@ -126,7 +126,7 @@ TObjectPtr<UEnemyAttackBase> USTTask_Attack::SelectBestAttack()
 			continue;
 		if (Enemy -> EncounterManager -> GetCombatManager() -> IsAttackPossible(PossibleAttacksSorted[AttackIndex].Value))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Amount of Attackers: %d"), Enemy -> EncounterManager -> GetCombatManager() ->GetAmountOfAttackers())
+			// UE_LOG(LogTemp, Warning, TEXT("Amount of Attackers: %d"), Enemy -> EncounterManager -> GetCombatManager() ->GetAmountOfAttackers())
 			Enemy -> EncounterManager -> GetCombatManager() -> RequestAttack(Enemy, PossibleAttacksSorted[AttackIndex].Value);
 			return PossibleAttacksSorted[AttackIndex].Key;
 		}
