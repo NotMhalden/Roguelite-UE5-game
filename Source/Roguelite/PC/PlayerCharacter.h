@@ -85,6 +85,14 @@ private:
 	FVector CurrentMantleLocation;
 	FVector PreMantleLocation;
 
+public:
+	TArray<TWeakObjectPtr<AActor>> InteractableActors;
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Interact", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	float MaxInteractAngle = 50.f;
+	
+	
 	
 	
 protected:
@@ -103,6 +111,13 @@ public:
 	
 public:
 	void MainAction();
+	void SecondaryAction();
+	
+	void MeleeAction();
+	
+	void Interact();
+	void NewInteractable(TWeakObjectPtr<AActor> NewInteractableActor);
+	void RemoveInteractable(TWeakObjectPtr<AActor> InteractableActorToRemove);
 	
 	void Dash(const FInputActionValue& Value);
 	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode = 0) override;

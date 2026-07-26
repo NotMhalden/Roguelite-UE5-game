@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "EncounterManager.generated.h"
 
+class ARewardBase;
 class UCombatManager;
 class AEnemyCharacter;
 class APlayerCharacter;
@@ -53,52 +54,58 @@ public:
 	
 public:
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Encounter|AI", meta = (AllowPrivateAccess = "true"))
 	TArray<AEnemyCharacter*> Enemies;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Encounter|AI", meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 AmountOfEnemies = 0;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<AEnemyCharacter>> ActiveEnemyClasses;
 	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 CurrentWave = 0;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 TotalWaves = 3;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 Difficulty = 1;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 AmountOfEnemiesToSpawn = 5;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0.f))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Encounter|AI", meta = (AllowPrivateAccess = "true", ClampMin = 0.f))
 	float PositioningHeightThreshold = 150.f;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0.f))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Encounter|AI", meta = (AllowPrivateAccess = "true", ClampMin = 0.f))
 	float PositioningHeightPlateau = PositioningHeightThreshold/2;
 
 	
 protected:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category="Encounter|Player")
 	TObjectPtr<APlayerCharacter> PlayerCharacter = nullptr;
 	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category="Encounter|Player")
 	float PlayerPositionDriftThreshold = 500.f;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category="Encounter|Player")
 	float PlayerPositionDrift = 0.f;
 	FVector PlayerPositionBeforeDrift;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category="Encounter|Player")
 	FVector PlayerVelocityOverTime;
-	UPROPERTY(EditDefaultsOnly, meta=(ClampMin = 0.f))
+	UPROPERTY(EditDefaultsOnly, Category="Encounter|Player", meta=(ClampMin = 0.f))
 	float PlayerVelocitySmoothingTime = 0.3f;
 	
 	
 protected:
-	UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category="Encounter", meta = (AllowPrivateAccess = "true", ClampMin = 0))
+	TArray<TWeakObjectPtr<ARewardBase>> Rewards;
+	
+	
+	
+protected:
+	UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite, Category="Encounter|Data", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCombatManager> CombatManager;
 
 };

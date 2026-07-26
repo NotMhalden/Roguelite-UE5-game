@@ -10,6 +10,7 @@
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Roguelite/Room/Interactable.h"
 #include "Roguelite/Weapon/HitscanWeapon.h"
 #include "UObject/ReferenceChainSearch.h"
 
@@ -95,6 +96,79 @@ void APlayerCharacter::MainAction()
 	// UE_LOG(LogTemp, Warning, TEXT("Player shoots"));
 	CurrentWeapon -> MainAttack(Camera -> GetForwardVector(), Camera -> GetComponentLocation());
 }
+
+
+void APlayerCharacter::SecondaryAction()
+{
+}
+
+
+void APlayerCharacter::MeleeAction()
+{
+}
+
+
+void APlayerCharacter::Interact()
+{
+	if (InteractableActors.IsEmpty())
+		return;
+	
+	
+	const FVector ForwardVector = Camera -> GetForwardVector();
+	const FVector CameraLocation = Camera -> GetComponentLocation();
+	
+	const float MinInteractCosine = FMath::Cos(FMath::DegreesToRadians(MaxInteractAngle));
+	
+	float BestInteractableCosine = MinInteractCosine;
+	TWeakObjectPtr<AActor> BestInteractableActor = nullptr;
+	
+	
+	for (const TWeakObjectPtr<AActor>& InteractableActor : InteractableActors)
+	{
+		if (not InteractableActor.Get())
+			continue;
+		
+		const FVector VectorToInteractable = ( InteractableActor->GetActorLocation() -  CameraLocation).GetSafeNormal();
+		const float CosineToInteractable = FVector::DotProduct(ForwardVector, VectorToInteractable);
+		
+		if (CosineToInteractable > BestInteractableCosine)
+		{
+			BestInteractableCosine = CosineToInteractable;
+			BestInteractableActor = InteractableActor;
+		}
+	}
+	
+	if (not BestInteractableActor.IsValid())
+		return;
+	
+	if (IInteractable* Interactable = Cast<IInteractable>(BestInteractableActor.Get()))
+	{
+		Interactable -> Interact(this);
+	}
+}
+
+
+
+void APlayerCharacter::NewInteractable(TWeakObjectPtr<AActor> NewInteractableActor)
+{
+	if (not InteractableActors.Contains(NewInteractableActor))
+	{
+		InteractableActors.Add(NewInteractableActor);
+		if (InteractableActors.Num() == 1)
+		{
+			// Code to display "Press E to interact" or whatever
+		}
+	}
+}
+
+void APlayerCharacter::RemoveInteractable(TWeakObjectPtr<AActor> InteractableActorToRemove)
+{
+	if (InteractableActors.Contains(InteractableActorToRemove))
+	{
+		InteractableActors.Remove(InteractableActorToRemove);
+	}
+}
+
 
 
 

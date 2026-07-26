@@ -59,6 +59,12 @@ void APCController::SetupInputComponent()
 	EnhancedInputComponent -> BindAction(IADash.Get(), ETriggerEvent::Triggered, this, &APCController::Dash);
 	
 	EnhancedInputComponent -> BindAction(IAMainAction.Get(), ETriggerEvent::Triggered, this, &APCController::MainAction);
+	EnhancedInputComponent -> BindAction(IASecondaryAction.Get(), ETriggerEvent::Triggered, this, &APCController::SecondaryAction);
+	
+	EnhancedInputComponent -> BindAction(IAMeleeAction.Get(), ETriggerEvent::Started, this, &APCController::MeleeAction);
+	
+	EnhancedInputComponent -> BindAction(IAInteract.Get(), ETriggerEvent::Started, this, &APCController::Interact);
+	
 }
 
 
@@ -140,5 +146,20 @@ void APCController::Dash(const FInputActionValue& Value)
 void APCController::MainAction()
 {
 	FPSCharacter -> MainAction();
+}
+
+void APCController::SecondaryAction()
+{
+	FPSCharacter -> SecondaryAction();
+}
+
+void APCController::MeleeAction()
+{
+	FPSCharacter -> MeleeAction();
+}
+
+void APCController::Interact()
+{
+	FPSCharacter -> Interact();
 }
 
