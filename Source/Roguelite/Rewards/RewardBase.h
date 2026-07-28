@@ -35,7 +35,7 @@ public:
 	virtual void Interact(APlayerCharacter* PlayerInteractor) override;
 
 protected:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USphereComponent* PickableSphere;
 	
 };

@@ -9,6 +9,10 @@
 #include "Roguelite/Weapon/HitscanWeapon.h"
 #include "PlayerCharacter.generated.h"
 
+struct FActiveAugment;
+class UAugmentDataAsset;
+class UAugmentEffectBase;
+class AEnemyCharacter;
 class APCController;
 
 UCLASS()
@@ -62,6 +66,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 Health = MaxHealth;
 	
+		
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	int32 MaxShield = 25;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	int32 Shield = 0;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 AmountOfJumps = 1;
 	
@@ -93,10 +103,17 @@ protected:
 	float MaxInteractAngle = 50.f;
 	
 	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Augments")
+	TArray<FActiveAugment> ActiveAugments;
 	
 	
 protected:
 	void DashDelayOver();
+	
+public:
+	void GrantAugment(UAugmentDataAsset* AugmentDefinition);
+	
 	
 public:
 	void SetHealth(int32 NewHealth);
@@ -105,7 +122,7 @@ public:
 	void SetMaxHealth(int32 NewMaxHealth);
 	int32 GetMaxHealth();
 	
-	void TakeDamage(int32 NewHealth);
+	void TakeDamage(int32 Damage, AEnemyCharacter* EnemyAttacker);
 	void Death();
 
 	

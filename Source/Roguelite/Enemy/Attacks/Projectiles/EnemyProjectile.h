@@ -6,6 +6,8 @@
 #include "Roguelite/Weapon/Bullet/BulletBase.h"
 #include "EnemyProjectile.generated.h"
 
+class AEnemyCharacter;
+
 UCLASS()
 class ROGUELITE_API AEnemyProjectile : public ABulletBase
 {
@@ -24,4 +26,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		FVector NormalImpulse, const FHitResult& Hit) override;
+	
+public:
+	UPROPERTY()
+	AEnemyCharacter* EnemyAttacker = nullptr;
 };

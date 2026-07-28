@@ -10,6 +10,8 @@
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Roguelite/Augments/AugmentDataAsset.h"
+#include "Roguelite/Augments/AugmentEffectBase.h"
 #include "Roguelite/Room/Interactable.h"
 #include "Roguelite/Weapon/HitscanWeapon.h"
 #include "UObject/ReferenceChainSearch.h"
@@ -335,7 +337,11 @@ void APlayerCharacter::DashDelayOver()
 	bIsDashing = false;
 }
 
-
+void APlayerCharacter::GrantAugment(UAugmentDataAsset* AugmentDefinition)
+{
+	if (AugmentDefinition)
+		ActiveAugments.Emplace(AugmentDefinition, this);
+}
 
 
 void APlayerCharacter::SetHealth(int32 NewHealth)
@@ -370,9 +376,17 @@ int32 APlayerCharacter::GetMaxHealth()
 
 
 
-void APlayerCharacter::TakeDamage(int32 NewHealth)
+void APlayerCharacter::TakeDamage(int32 Damage, AEnemyCharacter* EnemyAttacker)
 {
-	SetHealth(GetHealth() - NewHealth);
+	for (const FActiveAugment& ActiveAugment : ActiveAugments)
+	{
+		for (const TObjectPtr<UAugmentEffectBase>& AugmentEffect : ActiveAugment.AugmentEffects)
+		{
+			if (AugmentEffect)
+				AugmentEffect -> OnPlayerGetsDamaged(this, EnemyAttacker, Damage);
+		}
+	}
+	SetHealth(GetHealth() - Damage);
 }
 
 

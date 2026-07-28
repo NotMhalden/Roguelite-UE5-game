@@ -78,8 +78,9 @@ bool UEnemyProjectileShoot::Tick(AEnemyCharacter* Self, AActor* TargetActor, flo
 	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
 	// UE_LOG(LogTemp, Warning, TEXT("Enemy shot"));
-	auto* Bullet = World -> SpawnActor<ABulletBase>(BulletClass, SpawnLocation, Direction.Rotation(), ActorSpawnParams);
+	auto* Bullet = World -> SpawnActor<AEnemyProjectile>(BulletClass, SpawnLocation, Direction.Rotation(), ActorSpawnParams);
 	Bullet -> BulletDamage *= Damage;
+	Bullet -> EnemyAttacker = Self;
 
 	
 	FireRateCooldown = 1 / FireRate;

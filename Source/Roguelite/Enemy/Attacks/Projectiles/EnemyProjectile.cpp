@@ -52,7 +52,7 @@ void AEnemyProjectile::OnCollision(UPrimitiveComponent* HitComp, AActor* OtherAc
 {
 	if (auto* Player = Cast<APlayerCharacter>(OtherActor))
 	{
-		Player -> TakeDamage(BulletDamage);
+		Player -> TakeDamage(BulletDamage, EnemyAttacker);
 	}
 	Destroy();
 }

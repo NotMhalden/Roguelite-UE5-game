@@ -100,7 +100,7 @@ protected:
 	
 protected:
 	UPROPERTY(EditAnywhere, Category="Encounter", meta = (AllowPrivateAccess = "true", ClampMin = 0))
-	TArray<TWeakObjectPtr<ARewardBase>> Rewards;
+	TArray<TSubclassOf<ARewardBase>> ActiveRewardClasses;
 	
 	
 	
