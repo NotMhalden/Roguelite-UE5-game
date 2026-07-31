@@ -15,6 +15,26 @@ class UAugmentEffectBase;
 class AEnemyCharacter;
 class APCController;
 
+
+
+USTRUCT()
+struct FRunStatePlayerVariables
+{
+	GENERATED_BODY()
+
+public:
+	void ResetToDefaults() { *this = FRunStatePlayerVariables(); }
+	
+public:
+	int32 MaxHealth = 100;
+	int32 CurrentHealth = MaxHealth;
+	float MantlingTime = 0.2f;
+	TArray<FActiveAugment> ActiveAugments;
+};
+
+
+
+
 UCLASS()
 class ROGUELITE_API APlayerCharacter : public ACharacter
 {
@@ -61,16 +81,10 @@ protected:
 	float DashDelay = 0.8f;
 	
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 MaxHealth = 100;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	int32 Health = MaxHealth;
-	
-		
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
-	int32 MaxShield = 25;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
-	int32 Shield = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", ClampMin = 0))
 	int32 AmountOfJumps = 1;
@@ -85,6 +99,7 @@ private:
 	int MaxMantlingHeight = 250;
 	int MinMantlingHeight = 25;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true", ClampMin = "0"))
 	float MantlingTime = 0.2f;
 	float CurrentMantlingAlpha = 0.f;
 	const int MantleTraceDistance = 150;
@@ -99,7 +114,7 @@ public:
 	TArray<TWeakObjectPtr<AActor>> InteractableActors;
 	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input|Interact", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input|Interact", meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
 	float MaxInteractAngle = 50.f;
 	
 	
@@ -116,6 +131,11 @@ public:
 	
 	
 public:
+	void SetMantlingTime(float NewMantlingTime);
+	float GetMantlingTime();
+	
+	void SetNewHealth(int32 NewCurrentHealth, int32 NewMaxHealth);
+	
 	void SetHealth(int32 NewHealth);
 	int32 GetHealth();
 	

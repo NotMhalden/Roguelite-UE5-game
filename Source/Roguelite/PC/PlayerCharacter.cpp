@@ -7,12 +7,14 @@
 #include "TimerManager.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Roguelite/Augments/AugmentDataAsset.h"
 #include "Roguelite/Augments/AugmentEffectBase.h"
 #include "Roguelite/Room/Interactable.h"
+#include "Roguelite/Run/RunStateSubsystem.h"
 #include "Roguelite/Weapon/HitscanWeapon.h"
 #include "UObject/ReferenceChainSearch.h"
 
@@ -55,6 +57,8 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetGameInstance()->GetSubsystem<URunStateSubsystem>()->SetDataToPlayer(this);
+	
 	
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	APlayerController* CastPlayerController = Cast<APlayerController>(PlayerController);
@@ -80,6 +84,8 @@ void APlayerCharacter::BeginPlay()
 		FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepRelative, true);
 		CurrentWeapon -> AttachToComponent(Camera, AttachmentRules);
 	}
+	
+	
 	
 	if (OnPlayerHealthChange.IsBound())
 		OnPlayerHealthChange.Broadcast(Health, MaxHealth);
@@ -344,6 +350,29 @@ void APlayerCharacter::GrantAugment(UAugmentDataAsset* AugmentDefinition)
 }
 
 
+
+
+void APlayerCharacter::SetMantlingTime(float NewMantlingTime)
+{
+	if (NewMantlingTime > 0.f)
+		MantlingTime = NewMantlingTime;
+}
+
+float APlayerCharacter::GetMantlingTime()
+{
+	return MantlingTime;
+}
+
+
+
+
+void APlayerCharacter::SetNewHealth(int32 NewCurrentHealth, int32 NewMaxHealth)
+{
+	SetHealth(NewCurrentHealth);
+	SetMaxHealth(NewMaxHealth);
+}
+
+
 void APlayerCharacter::SetHealth(int32 NewHealth)
 {
 	Health = NewHealth;
@@ -386,6 +415,9 @@ void APlayerCharacter::TakeDamage(int32 Damage, AEnemyCharacter* EnemyAttacker)
 				AugmentEffect -> OnPlayerGetsDamaged(this, EnemyAttacker, Damage);
 		}
 	}
+	if (GetHealth() - Damage <= 0)
+		Death();
+	
 	SetHealth(GetHealth() - Damage);
 }
 
@@ -393,4 +425,6 @@ void APlayerCharacter::TakeDamage(int32 Damage, AEnemyCharacter* EnemyAttacker)
 
 void APlayerCharacter::Death()
 {
+	URunStateSubsystem* RunState = GetGameInstance()->GetSubsystem<URunStateSubsystem>();
+	RunState -> OnPlayerDeath();
 }
